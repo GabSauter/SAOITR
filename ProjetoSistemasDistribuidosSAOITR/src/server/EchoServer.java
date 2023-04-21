@@ -3,6 +3,8 @@ package server;
 
 import java.net.*;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -70,9 +72,13 @@ public class EchoServer extends Thread {
 
                 JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
                 int operation = jsonObject.get("id_operacao").getAsInt();
+                String senha = jsonObject.get("senha").getAsString();
 
                 switch (operation){
                     case 1: {
+
+                    	checkPasswork(senha);
+                    	
                         outputLine = logar(json);
                         break;
                     }
@@ -116,4 +122,12 @@ public class EchoServer extends Thread {
     private int gerarIdUsuario(){
         return 1;
     }
+    
+    public void checkPasswork(String hashedPassword) {
+		
+		if (BCrypt.checkpw("qwert123", hashedPassword))
+			System.out.println("It matches");
+		else
+			System.out.println("It does not match");
+	}
 }

@@ -55,8 +55,9 @@ public class EchoClient {
 
                     System.out.println("Senha: ");
                     senha = stdIn.readLine();
-                    login.setSenha(senha);
-
+                    JBCrypt bcrypt = new JBCrypt(senha);
+                    
+                    login.setSenha(bcrypt.getHashedPassword());
                     userInput = gson.toJson(login);
                 }break;
                 case 2: {
