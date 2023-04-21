@@ -73,11 +73,12 @@ public class EchoServer extends Thread {
                 JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
                 int operation = jsonObject.get("id_operacao").getAsInt();
                 String senha = jsonObject.get("senha").getAsString();
+                JBCrypt bcrypt = new JBCrypt();
 
                 switch (operation){
                     case 1: {
 
-                    	checkPasswork(senha);
+                    	bcrypt.checkPasswork(senha);
                     	
                         outputLine = logar(json);
                         break;
@@ -122,12 +123,4 @@ public class EchoServer extends Thread {
     private int gerarIdUsuario(){
         return 1;
     }
-    
-    public void checkPasswork(String hashedPassword) {
-		
-		if (BCrypt.checkpw("qwert123", hashedPassword))
-			System.out.println("It matches");
-		else
-			System.out.println("It does not match");
-	}
 }
