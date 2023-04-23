@@ -5,6 +5,9 @@ import java.net.*;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import server.JBCrypt;
 
 public class EchoClient {
     public static void main(String[] args) throws IOException {
@@ -46,6 +49,7 @@ public class EchoClient {
         do {
             System.out.println("Escolha qual operacao voce deseja fazer: \n 1. Login\n 2. Cadastro\n 3. Fechar");
             operation = (int) input.nextInt();
+            input.nextLine();
             switch (operation){
                 case 1: {
                     login.setId_operacao(1);
@@ -60,7 +64,8 @@ public class EchoClient {
                     userInput = gson.toJson(login);
                 }break;
                 case 2: {
-
+                	JsonObject json = new JsonObject();
+                	userInput = cadastrar(json, input);
                 }break;
                 case 3: {
                     System.out.println("Fechando...");
@@ -95,6 +100,25 @@ public class EchoClient {
         input.close();
         stdIn.close();
         echoSocket.close();
+    }
+    
+    private static String cadastrar(JsonObject json, Scanner input){
+			System.out.println("Cliente: Operação de cadastro");
+      
+			json.addProperty("id_operacao", 2);
+			
+			System.out.println("Nome: ");
+			String nome = input.nextLine();
+			json.addProperty("nome", nome);
+      
+			System.out.println("Email: ");
+			String email = input.nextLine();
+			json.addProperty("email", email);
+			
+			System.out.println("Senha: ");
+			String senha = input.nextLine();
+			json.addProperty("senha", senha);
+    	return json.toString();
     }
 }
 

@@ -2,11 +2,12 @@ package server;
 
 
 import java.net.*;
-
-import org.mindrot.jbcrypt.BCrypt;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import server.entities.Usuario;
 
 import java.io.*;
 
@@ -63,6 +64,8 @@ public class EchoServer extends Thread {
 
             String inputLine;
             String outputLine = "";
+            
+            ArrayList<Usuario> bdUsuario = new ArrayList<Usuario>();
 
             while ((inputLine = in.readLine()) != null){
 
@@ -72,16 +75,32 @@ public class EchoServer extends Thread {
 
                 JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
                 int operation = jsonObject.get("id_operacao").getAsInt();
-                String senha = jsonObject.get("senha").getAsString();
+                
                 JBCrypt bcrypt = new JBCrypt();
 
                 switch (operation){
                     case 1: {
-
+                    	String email = jsonObject.get("email").getAsString();
+                    	String senha = jsonObject.get("senha").getAsString();
                     	bcrypt.checkPasswork(senha);
+                    	
+                    	if(autenticar(email, senha, bdUsuario)) {
+                    		System.out.println("Autenticado!");
+                    	}else {
+                    		System.out.println("Não autenticado!");
+                    	}
                     	
                         outputLine = logar(json);
                         break;
+                    }
+                    case 2:{
+                    	Usuario usuario = new Usuario();
+                    	usuario.setNome(jsonObject.get("nome").getAsString());
+                    	usuario.setEmail(jsonObject.get("email").getAsString());
+                    	usuario.setSenha(jsonObject.get("senha").getAsString());
+                    	bdUsuario.add(usuario);
+                    	outputLine = cadastrar(json);
+                    	break;
                     }
                 }
 
@@ -119,8 +138,35 @@ public class EchoServer extends Thread {
 
         return json.toString();
     }
+    
+    private String cadastrar(JsonObject json){
+        System.out.println("Operação de cadastro");
+
+        if(validarDados()){
+            System.out.println("Deu certo");
+            json.addProperty("codigo", 200);
+        }else{
+            System.out.println("Deu errado");
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Erro durante o cadastro.");
+        }
+
+        return json.toString();
+    }
 
     private int gerarIdUsuario(){
         return 1;
+    }
+    
+    private boolean autenticar(String email, String senha, ArrayList<Usuario> bdUsuario) {
+    	
+    	for(Usuario usuario : bdUsuario) {
+    		if(usuario.getEmail().equals(email)) {
+    			if(usuario.getSenha().equals(senha))
+    				return true;
+    		}
+    	}
+    	
+		return false;
     }
 }
