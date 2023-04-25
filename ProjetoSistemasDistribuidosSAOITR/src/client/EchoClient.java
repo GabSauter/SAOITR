@@ -7,8 +7,6 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import server.JBCrypt;
-
 public class EchoClient {
     public static void main(String[] args) throws IOException {
 
