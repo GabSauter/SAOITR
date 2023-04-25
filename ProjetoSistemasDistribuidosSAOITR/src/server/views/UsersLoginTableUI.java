@@ -1,4 +1,4 @@
-package server.ui;
+package server.views;
 
 import java.awt.EventQueue;
 
