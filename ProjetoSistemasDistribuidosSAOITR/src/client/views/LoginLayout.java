@@ -16,7 +16,7 @@ public class LoginLayout extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtFieldEmail;
-	private JPasswordField passwordField;
+	private JPasswordField txtFieldPassword;
 
 	/**
 	 * Launch the application.
@@ -75,8 +75,8 @@ public class LoginLayout extends JFrame {
 		lblNewLabel.setBounds(36, 11, 221, 34);
 		contentPane.add(lblNewLabel);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(92, 84, 159, 20);
-		contentPane.add(passwordField);
+		txtFieldPassword = new JPasswordField();
+		txtFieldPassword.setBounds(92, 84, 159, 20);
+		contentPane.add(txtFieldPassword);
 	}
 }
