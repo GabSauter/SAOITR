@@ -2,12 +2,13 @@ package server;
 
 
 import java.net.*;
-import java.util.ArrayList;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import server.entities.Usuario;
+import server.dao.Database;
+import server.dao.UserDAO;
+import server.entities.User;
 
 import java.io.*;
 
@@ -57,6 +58,8 @@ public class EchoServer extends Thread {
         System.out.println ("New Communication Thread Started");
 
         Gson gson = new Gson();
+        
+        
 
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
@@ -64,8 +67,6 @@ public class EchoServer extends Thread {
 
             String inputLine;
             String outputLine = "";
-            
-            ArrayList<Usuario> bdUsuario = new ArrayList<Usuario>();
 
             while ((inputLine = in.readLine()) != null){
 
@@ -84,7 +85,7 @@ public class EchoServer extends Thread {
                     	String senha = jsonObject.get("senha").getAsString();
                     	bcrypt.checkPasswork(senha);
                     	
-                    	if(autenticar(email, senha, bdUsuario)) {
+                    	if(autenticar(email, senha)) {
                     		System.out.println("Autenticado!");
                     	}else {
                     		System.out.println("Não autenticado!");
@@ -94,11 +95,20 @@ public class EchoServer extends Thread {
                         break;
                     }
                     case 2:{
-                    	Usuario usuario = new Usuario();
-                    	usuario.setNome(jsonObject.get("nome").getAsString());
-                    	usuario.setEmail(jsonObject.get("email").getAsString());
-                    	usuario.setSenha(jsonObject.get("senha").getAsString());
-                    	bdUsuario.add(usuario);
+                    	User user = new User();
+                    	user.setName(jsonObject.get("nome").getAsString());
+                    	user.setEmail(jsonObject.get("email").getAsString());
+                    	user.setPassword(jsonObject.get("senha").getAsString());
+                    	user.setToken("123abc");
+                    	
+                    	try {
+                    		Connection conn = Database.connect();
+                    		new UserDAO(conn).register(user);
+                		}catch(SQLException | IOException e) {
+                			System.out.println(e.getMessage());
+                		}
+                    	
+                    	
                     	outputLine = cadastrar(json);
                     	break;
                     }
@@ -141,6 +151,8 @@ public class EchoServer extends Thread {
     
     private String cadastrar(JsonObject json){
         System.out.println("Operação de cadastro");
+        
+        
 
         if(validarDados()){
             System.out.println("Deu certo");
@@ -158,14 +170,9 @@ public class EchoServer extends Thread {
         return 1;
     }
     
-    private boolean autenticar(String email, String senha, ArrayList<Usuario> bdUsuario) {
+    private boolean autenticar(String email, String senha) {
     	
-    	for(Usuario usuario : bdUsuario) {
-    		if(usuario.getEmail().equals(email)) {
-    			if(usuario.getSenha().equals(senha))
-    				return true;
-    		}
-    	}
+    	
     	
 		return false;
     }

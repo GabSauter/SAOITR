@@ -75,7 +75,12 @@ public class EchoClient {
 
             System.out.println("Envia para o servidor: " + userInput);
             out.println(userInput);
-            System.out.println("Recebe do servidor: " + in.readLine());
+            
+            try {
+            	System.out.println("Recebe do servidor: " + in.readLine());
+            }catch(Exception e){
+            	System.out.println(e);
+            }
 
 //            Gson gson2 = new Gson();
 //
