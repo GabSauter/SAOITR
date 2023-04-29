@@ -50,7 +50,7 @@ public class EchoClient {
             input.nextLine();
             switch (operation){
                 case 1: {
-                    login.setId_operacao(1);
+                    login.setId_operacao(3);
                     System.out.println("Email: ");
                     email = stdIn.readLine();
                     login.setEmail(email);
@@ -108,7 +108,7 @@ public class EchoClient {
     private static String cadastrar(JsonObject json, Scanner input){
 			System.out.println("Cliente: Operação de cadastro");
       
-			json.addProperty("id_operacao", 2);
+			json.addProperty("id_operacao", 1);
 			
 			System.out.println("Nome: ");
 			String nome = input.nextLine();

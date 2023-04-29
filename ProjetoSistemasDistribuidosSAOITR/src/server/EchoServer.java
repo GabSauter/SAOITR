@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import server.dao.Database;
 import server.dao.UserDAO;
 import server.entities.User;
+import server.logic.UserLogic;
 
 import java.io.*;
 
@@ -57,10 +58,6 @@ public class EchoServer extends Thread {
     public void run(){
         System.out.println ("New Communication Thread Started");
 
-        Gson gson = new Gson();
-        
-        
-
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
             BufferedReader in = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
@@ -70,17 +67,28 @@ public class EchoServer extends Thread {
 
             while ((inputLine = in.readLine()) != null){
 
-                JsonObject json = new JsonObject();
-
+            	System.out.println("-------------------------------------------------------------------------------------------");
                 System.out.println ("Recebe do cliente: " + inputLine);
 
+                JsonObject json = new JsonObject();
+                Gson gson = new Gson();
                 JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
                 int operation = jsonObject.get("id_operacao").getAsInt();
                 
                 JBCrypt bcrypt = new JBCrypt();
 
                 switch (operation){
-                    case 1: {
+	                case 1:{ // Cadastrar
+	                	UserLogic userLogic = new UserLogic(jsonObject);
+	                	try {
+	                		outputLine = userLogic.userRegister();
+	                	}catch(SQLException | IOException e) {
+	            			System.out.println(e.getMessage());
+	                	}
+	                	
+	                	break;
+	                }
+                    case 3: { // Login
                     	String email = jsonObject.get("email").getAsString();
                     	String senha = jsonObject.get("senha").getAsString();
                     	bcrypt.checkPasswork(senha);
@@ -94,27 +102,11 @@ public class EchoServer extends Thread {
                         outputLine = logar(json);
                         break;
                     }
-                    case 2:{
-                    	User user = new User();
-                    	user.setName(jsonObject.get("nome").getAsString());
-                    	user.setEmail(jsonObject.get("email").getAsString());
-                    	user.setPassword(jsonObject.get("senha").getAsString());
-                    	user.setToken("123abc");
-                    	
-                    	try {
-                    		Connection conn = Database.connect();
-                    		new UserDAO(conn).register(user);
-                		}catch(SQLException | IOException e) {
-                			System.out.println(e.getMessage());
-                		}
-                    	
-                    	
-                    	outputLine = cadastrar(json);
-                    	break;
-                    }
+                    
                 }
 
                 System.out.println("Envia para o cliente: " + outputLine);
+                System.out.println("-------------------------------------------------------------------------------------------");
                 out.println(outputLine);
             }
 
@@ -152,8 +144,6 @@ public class EchoServer extends Thread {
     private String cadastrar(JsonObject json){
         System.out.println("Operação de cadastro");
         
-        
-
         if(validarDados()){
             System.out.println("Deu certo");
             json.addProperty("codigo", 200);
