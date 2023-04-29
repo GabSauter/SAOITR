@@ -2,6 +2,7 @@ package server.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -39,13 +40,45 @@ public class UserDAO {
 		return null;
 	}
 	
-	public void updater(User user) {
+	public void update(User user) {
 		
 	}
 	
 	public int delete(int id_usuario) {
 		
 		return 0;
+	}
+	
+	public User searchLogin(String email, String password) throws SQLException {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select * from user where email = ? and password = ?");
+			st.setString(1, email);
+			st.setString(2, password);
+			
+			rs = st.executeQuery();
+			
+			if(rs.next()) {
+				User user = new User();
+				
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPassword(rs.getString("password"));
+				user.setToken(rs.getString("token"));
+				
+				return user;
+			}
+			
+		} finally {
+			Database.endStatement(st);
+			Database.finalizarResultSet(rs);
+			Database.disconnect();
+		}
+		
+		return null;
 	}
 	
 	public int logout(int id_usuario) {
