@@ -91,15 +91,14 @@ public class EchoServer extends Thread {
                     case 3: { // Login
                     	String email = jsonObject.get("email").getAsString();
                     	String senha = jsonObject.get("senha").getAsString();
-                    	bcrypt.checkPasswork(senha);
                     	
-                    	if(autenticar(email, senha)) {
-                    		System.out.println("Autenticado!");
-                    	}else {
-                    		System.out.println("Não autenticado!");
-                    	}
-                    	
-                        outputLine = logar(json);
+                    	UserLogic userLogic = new UserLogic(jsonObject);
+	                	try {
+	                		outputLine = userLogic.userLogin(email, senha);
+	                	}catch(SQLException | IOException e) {
+	            			System.out.println(e.getMessage());
+	                	}
+	                	
                         break;
                     }
                     

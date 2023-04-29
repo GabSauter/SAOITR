@@ -24,4 +24,9 @@ public class UserService {
 		Connection conn = Database.connect();
 		new UserDAO(conn).delete(id_user);
 	}
+	
+	public User searchLogin(String email, String password) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		return new UserDAO(conn).searchLogin(email, password);
+	}
 }

@@ -1,6 +1,7 @@
 package server.entities;
 
 public class User {
+	private int id;
 	private String name;
 	private String email;
 	private String password;
@@ -29,5 +30,11 @@ public class User {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public int getIdUsuario() {
+		return id;
+	}
+	public void setIdUsuario(int id) {
+		this.id = id;
 	}
 }
