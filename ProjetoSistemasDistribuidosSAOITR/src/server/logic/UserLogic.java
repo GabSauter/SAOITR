@@ -21,7 +21,7 @@ public class UserLogic {
 		user.setName(json.get("nome").getAsString());
 		user.setEmail(json.get("email").getAsString());
 		user.setPassword(json.get("senha").getAsString());
-		user.setToken("123abc");
+		user.setToken("");
 		
 		if(registerValidation(this.user)) {
         	new UserService().register(user);

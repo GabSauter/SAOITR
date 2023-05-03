@@ -52,9 +52,17 @@ public class UserDAO {
 	public User searchLogin(String email, String password) throws SQLException {
 		
 		PreparedStatement st = null;
+		PreparedStatement st2 = null;
 		ResultSet rs = null;
 		
 		try {
+			st2 = conn.prepareStatement("update user set token = ? where email = ? and password = ?");
+			st2.setString(1, "token123");
+			st2.setString(2, email);
+			st2.setString(3, password);
+			
+			st2.executeUpdate();
+			
 			st = conn.prepareStatement("select * from user where email = ? and password = ?");
 			st.setString(1, email);
 			st.setString(2, password);
