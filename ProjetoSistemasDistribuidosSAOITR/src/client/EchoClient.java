@@ -4,14 +4,19 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import client.logic.User;
 
 public class EchoClient {
     public static void main(String[] args) throws IOException {
 
         String serverHostname = "127.0.0.1";
-
+    	//String serverHostname = "10.20.8.179";
+    	
         if (args.length > 0)
             serverHostname = args[0];
         System.out.println ("Attempting to connect to host " + serverHostname + " on port 10008.");
@@ -21,7 +26,8 @@ public class EchoClient {
         BufferedReader in = null;
 
         try {
-            echoSocket = new Socket(serverHostname, 10008);
+            //echoSocket = new Socket(serverHostname, 10008);
+        	echoSocket = new Socket(serverHostname, 23000);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (UnknownHostException e) {
@@ -39,6 +45,8 @@ public class EchoClient {
         String senha;
         Login login = new Login();
         Gson gson = new Gson();
+        
+        User user = new User();
 
         boolean estaAberto = true;
 
@@ -60,27 +68,56 @@ public class EchoClient {
                     login.setSenha(senha);
                     
                     userInput = gson.toJson(login);
-                }break;
+                    System.out.println("Envia para o servidor: " + userInput);
+                    out.println(userInput);
+                    
+//                    Gson gson2 = new Gson();
+//	            	JsonObject jsonObject = gson2.fromJson(in, JsonObject.class);
+//	            	int codigo = jsonObject.get("codigo").getAsInt();
+//	            	
+//	            	if(codigo == 200) {
+//	            		user.setId_usuario(jsonObject.get("id_usuario").getAsInt());
+//	            		user.setToken(jsonObject.get("token").getAsString());
+//	            		System.out.println(user.getId_usuario() + user.getToken());
+//	            	}
+	            	break;
+                }
                 case 2: {
                 	JsonObject json = new JsonObject();
                 	userInput = cadastrar(json, input);
+                	System.out.println("Envia para o servidor: " + userInput);
+                    out.println(userInput);
                 }break;
                 case 3: {
                     System.out.println("Fechando...");
                     estaAberto = false;
                 }break;
+                case 4: {
+                	user.logout();
+                	System.out.println("Envia para o servidor: " + userInput);
+                    out.println(userInput);
+                }break;
             }
             if(!estaAberto)
                 break;
 
-            System.out.println("Envia para o servidor: " + userInput);
-            out.println(userInput);
             
             try {
             	System.out.println("Recebe do servidor: " + in.readLine());
             }catch(Exception e){
             	System.out.println(e);
             }
+            
+//	            	Gson gson2 = new Gson();
+//	            	JsonObject jsonObject = gson2.fromJson(in, JsonObject.class);
+//	            	int codigo = jsonObject.get("codigo").getAsInt();
+//	            	
+//	            	if(codigo == 200) {
+//	            		user.setId_usuario(jsonObject.get("id_usuario").getAsInt());
+//	            		user.setToken(jsonObject.get("token").getAsString());
+//	            		System.out.println(user.getId_usuario() + user.getToken());
+//	            	}
+//	            	break;
 
 //            Gson gson2 = new Gson();
 //
@@ -120,6 +157,11 @@ public class EchoClient {
 			
 			System.out.println("Senha: ");
 			String senha = input.nextLine();
+			//String hashed = BCrypt.hashpw(senha, BCrypt.gensalt());
+			//System.out.println(hashed);
+			
+			
+			
 			json.addProperty("senha", senha);
     	return json.toString();
     }

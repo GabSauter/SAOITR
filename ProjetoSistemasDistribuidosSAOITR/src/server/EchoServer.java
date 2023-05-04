@@ -2,13 +2,9 @@ package server;
 
 
 import java.net.*;
-import java.sql.Connection;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import server.dao.Database;
-import server.dao.UserDAO;
-import server.entities.User;
 import server.logic.UserLogic;
 
 import java.io.*;
@@ -21,7 +17,7 @@ public class EchoServer extends Thread {
         ServerSocket serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(10008);
+            serverSocket = new ServerSocket(23000);
             System.out.println ("Connection Socket Created");
             try {
                 while (true){
@@ -101,6 +97,18 @@ public class EchoServer extends Thread {
 	                	
                         break;
                     }
+                    case 9: {
+                    	String token = jsonObject.get("token").getAsString();
+                    	int id_usuario = jsonObject.get("id_usuario").getAsInt();
+                    	
+                    	UserLogic userLogic = new UserLogic(jsonObject);
+                    	
+                    	try {
+	                		outputLine = userLogic.userLogout(token, id_usuario);
+	                	}catch(SQLException | IOException e) {
+	            			System.out.println(e.getMessage());
+	                	}
+                    }
                     
                 }
 
@@ -117,52 +125,5 @@ public class EchoServer extends Thread {
             System.err.println("Problem with Communication Server");
             System.exit(1);
         }
-    }
-
-    public boolean validarDados(){
-        return true;
-    }
-
-    private String logar(JsonObject json){
-        System.out.println("Operação de login");
-
-        if(validarDados()){
-            System.out.println("Deu certo");
-            json.addProperty("codigo", 200);
-            json.addProperty("token", 123);
-            json.addProperty("id_usuario", gerarIdUsuario());
-        }else{
-            System.out.println("Deu errado");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Erro durante o login");
-        }
-
-        return json.toString();
-    }
-    
-    private String cadastrar(JsonObject json){
-        System.out.println("Operação de cadastro");
-        
-        if(validarDados()){
-            System.out.println("Deu certo");
-            json.addProperty("codigo", 200);
-        }else{
-            System.out.println("Deu errado");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Erro durante o cadastro.");
-        }
-
-        return json.toString();
-    }
-
-    private int gerarIdUsuario(){
-        return 1;
-    }
-    
-    private boolean autenticar(String email, String senha) {
-    	
-    	
-    	
-		return false;
     }
 }

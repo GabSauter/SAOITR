@@ -90,8 +90,19 @@ public class UserDAO {
 		return null;
 	}
 	
-	public int logout(int id_usuario) {
+	public void logout(String token, int id_usuario) throws SQLException {
 		
-		return 0;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("update user set token = ? where id = ?");
+			st.setString(1, "");
+			st.setInt(2, id_usuario);
+		} finally {
+			Database.endStatement(st);
+			Database.finalizarResultSet(rs);
+			Database.disconnect();
+		}
 	}
 }

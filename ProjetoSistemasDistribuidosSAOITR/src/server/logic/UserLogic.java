@@ -46,7 +46,7 @@ public class UserLogic {
 				return createResultJson(3, true);
 			}
 		}
-			
+		
 		return createResultJson(3, false);
 	}
 	
@@ -62,12 +62,25 @@ public class UserLogic {
 	private boolean registerValidation(User user) {
 		if(user.getName().length() < 3 || user.getName().length() > 32 ||
 		   user.getEmail().length() < 16 || user.getEmail().length() > 50 ||
-		   user.getPassword().length() < 8 || user.getPassword().length() > 32 || // Precisa ver aqui porque vai ser um hash
+		   user.getPassword().length() < 8 || user.getPassword().length() > 255 || // Precisa ver aqui porque vai ser um hash
 		   !user.getEmail().contains("@")
-		   /*Verificar no banco de dados se ja tem um email igual*/)
+		   /*Verificar no banco de dados se ja tem um email igual New UserService().moreThanOneEmail(email)*/)
 			return false;
 		
 		return true;
+	}
+	
+	public String userLogout(String token, int id_usuario) throws SQLException, IOException {
+		
+		this.user = new User();
+		user.setToken(token);
+		user.setIdUsuario(id_usuario);
+		
+		if(token.equals("")) // Quer dizer que não esta logado
+			return createResultJson(9, false);
+		
+		new UserService().logout(token, id_usuario);	
+		return createResultJson(9, true);
 	}
 	
 	private String createResultJson(int idOperacao, boolean correct) {
@@ -94,6 +107,16 @@ public class UserLogic {
 				}else {
 					json.addProperty("codigo", 500);
 					json.addProperty("mensagem", "Email ou senha incorreto.");
+				}
+				return json.toString();
+			}
+			case 9: {
+				System.out.println("Operação de logout");
+				if(correct) {
+					json.addProperty("codigo", 200);
+				}else {
+					json.addProperty("codigo", 500);
+					json.addProperty("mensagem", "Houve um erro durante o logout.");
 				}
 				return json.toString();
 			}

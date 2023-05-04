@@ -29,4 +29,9 @@ public class UserService {
 		Connection conn = Database.connect();
 		return new UserDAO(conn).searchLogin(email, password);
 	}
+	
+	public void logout(String token, int id_usuario) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		new UserDAO(conn).logout(token, id_usuario);
+	}
 }
