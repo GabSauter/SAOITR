@@ -99,6 +99,8 @@ public class UserDAO {
 			st = conn.prepareStatement("update user set token = ? where id = ?");
 			st.setString(1, "");
 			st.setInt(2, id_usuario);
+			
+			st.executeUpdate();
 		} finally {
 			Database.endStatement(st);
 			Database.finalizarResultSet(rs);

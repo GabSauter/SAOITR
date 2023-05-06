@@ -51,8 +51,11 @@ public class EchoClient {
         boolean estaAberto = true;
 
         int operation;
+        
+        
 
         do {
+        	estaAberto = true;
             System.out.println("Escolha qual operacao voce deseja fazer: \n 1. Login\n 2. Cadastro\n 3. Fechar");
             operation = (int) input.nextInt();
             input.nextLine();
@@ -70,16 +73,25 @@ public class EchoClient {
                     userInput = gson.toJson(login);
                     System.out.println("Envia para o servidor: " + userInput);
                     out.println(userInput);
+                    String inputLine = "";
+                    try {
+                    	inputLine = in.readLine();
+                    	System.out.println("Recebe do servidor: " + inputLine);
+                    }catch(Exception e){
+                    	System.out.println(e);
+                    }
+                    System.out.println("continua...");
+                    Gson gson2 = new Gson();
+                    JsonObject jsonObject2 = new JsonObject();
+	            	jsonObject2 = gson2.fromJson(inputLine, JsonObject.class);
+	            	int codigo = jsonObject2.get("codigo").getAsInt();
+	            	
+	            	if(codigo == 200) {
+	            		user.setId_usuario(jsonObject2.get("id_usuario").getAsInt());
+	            		user.setToken(jsonObject2.get("token").getAsString());
+	            		System.out.println(user.getId_usuario() + user.getToken());
+	            	}
                     
-//                    Gson gson2 = new Gson();
-//	            	JsonObject jsonObject = gson2.fromJson(in, JsonObject.class);
-//	            	int codigo = jsonObject.get("codigo").getAsInt();
-//	            	
-//	            	if(codigo == 200) {
-//	            		user.setId_usuario(jsonObject.get("id_usuario").getAsInt());
-//	            		user.setToken(jsonObject.get("token").getAsString());
-//	            		System.out.println(user.getId_usuario() + user.getToken());
-//	            	}
 	            	break;
                 }
                 case 2: {
@@ -93,20 +105,17 @@ public class EchoClient {
                     estaAberto = false;
                 }break;
                 case 4: {
-                	user.logout();
+                	userInput = user.logout();
                 	System.out.println("Envia para o servidor: " + userInput);
                     out.println(userInput);
                 }break;
             }
             if(!estaAberto)
-                break;
+            	break;
+                
 
             
-            try {
-            	System.out.println("Recebe do servidor: " + in.readLine());
-            }catch(Exception e){
-            	System.out.println(e);
-            }
+            
             
 //	            	Gson gson2 = new Gson();
 //	            	JsonObject jsonObject = gson2.fromJson(in, JsonObject.class);

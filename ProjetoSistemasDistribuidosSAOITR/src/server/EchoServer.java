@@ -65,11 +65,15 @@ public class EchoServer extends Thread {
 
             	System.out.println("-------------------------------------------------------------------------------------------");
                 System.out.println ("Recebe do cliente: " + inputLine);
-
+                int operation = 0;
+                JsonObject jsonObject = null;
+                
                 JsonObject json = new JsonObject();
                 Gson gson = new Gson();
-                JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
-                int operation = jsonObject.get("id_operacao").getAsInt();
+                if(inputLine != null) {
+                	jsonObject = gson.fromJson(inputLine, JsonObject.class);
+                	operation = jsonObject.get("id_operacao").getAsInt();
+                }
                 
                 JBCrypt bcrypt = new JBCrypt();
 
@@ -108,6 +112,10 @@ public class EchoServer extends Thread {
 	                	}catch(SQLException | IOException e) {
 	            			System.out.println(e.getMessage());
 	                	}
+                    	break;
+                    }
+                    default:{
+                    	System.out.println("Operação inválida");
                     }
                     
                 }
@@ -123,7 +131,7 @@ public class EchoServer extends Thread {
         }
         catch (IOException e){
             System.err.println("Problem with Communication Server");
-            System.exit(1);
+            //System.exit(1);
         }
     }
 }
