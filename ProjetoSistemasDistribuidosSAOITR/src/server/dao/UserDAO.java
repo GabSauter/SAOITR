@@ -20,7 +20,6 @@ public class UserDAO {
 		PreparedStatement st = null;
 		
 		try {
-			
 			st = conn.prepareStatement("insert into user (name, email, password, token) values(?,?,?,?)");
 			
 			st.setString(1, user.getName());
@@ -106,5 +105,30 @@ public class UserDAO {
 			Database.finalizarResultSet(rs);
 			Database.disconnect();
 		}
+	}
+	
+	public boolean emailAlreadyExists(String email) throws SQLException {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select * from user where email = ?");
+			st.setString(1, email);
+			
+			rs = st.executeQuery();
+			
+			if(rs.next()) {
+				System.out.println("Email já está em uso");
+				return true;
+			}
+			
+		} finally {
+			Database.endStatement(st);
+			Database.finalizarResultSet(rs);
+			Database.disconnect();
+		}
+		
+		return false;
 	}
 }

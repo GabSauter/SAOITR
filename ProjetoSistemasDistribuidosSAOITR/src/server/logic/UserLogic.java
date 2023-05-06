@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.sql.SQLException;
 import com.google.gson.JsonObject;
 import server.entities.User;
+import server.logic.validation.UserValidation;
 import server.service.UserService;
 
 public class UserLogic {
 
 	private User user;
 	private JsonObject json;
+	private UserValidation userValidation;
 	
 	public UserLogic(JsonObject json) {
 		this.json = json;
+		this.userValidation = new UserValidation();
 	}
 	
 	public String userRegister() throws SQLException, IOException {
@@ -23,7 +26,7 @@ public class UserLogic {
 		user.setPassword(json.get("senha").getAsString());
 		user.setToken("");
 		
-		if(registerValidation(this.user)) {
+		if(userValidation.registerValidation(this.user)) {
         	new UserService().register(user);
         	return createResultJson(1, true);
 		}else {
@@ -32,13 +35,16 @@ public class UserLogic {
 		
 	}
 	
-	public String userLogin(String email, String password) throws SQLException, IOException {
-		
+	public String userLogin() throws SQLException, IOException {
 		this.user = new User();
-		user.setEmail(email);
-		user.setPassword(password);
 		
-		if(loginValidation(user)) {
+		String email = json.get("email").getAsString();
+		String password = json.get("senha").getAsString();
+		
+		user.setEmail(email);
+		user.setPassword(json.get("senha").getAsString());
+		
+		if(userValidation.loginValidation(user)) {
 			this.user = new UserService().searchLogin(email, password);
 			if(user == null) {
 				return createResultJson(3, false);
@@ -50,27 +56,11 @@ public class UserLogic {
 		return createResultJson(3, false);
 	}
 	
-	private boolean loginValidation(User user) {
-		if(user.getEmail().length() < 16 || user.getEmail().length() > 50 ||
-		   user.getPassword().length() < 8 || user.getPassword().length() > 32 || // Precisa ver aqui porque vai ser um hash
-		   !user.getEmail().contains("@"))
-			return false;
+	public String userLogout() throws SQLException, IOException {
+		this.user = new User();
 		
-		return true;
-	}
-	
-	private boolean registerValidation(User user) {
-		if(user.getName().length() < 3 || user.getName().length() > 32 ||
-		   user.getEmail().length() < 16 || user.getEmail().length() > 50 ||
-		   user.getPassword().length() < 8 || user.getPassword().length() > 255 || // Precisa ver aqui porque vai ser um hash
-		   !user.getEmail().contains("@")
-		   /*Verificar no banco de dados se ja tem um email igual New UserService().moreThanOneEmail(email)*/)
-			return false;
-		
-		return true;
-	}
-	
-	public String userLogout(String token, int id_usuario) throws SQLException, IOException {
+		String token = json.get("token").getAsString();
+    	int id_usuario = json.get("id_usuario").getAsInt();
 		
 		this.user = new User();
 		user.setToken(token);

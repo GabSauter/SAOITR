@@ -65,20 +65,17 @@ public class EchoServer extends Thread {
 
             	System.out.println("-------------------------------------------------------------------------------------------");
                 System.out.println ("Recebe do cliente: " + inputLine);
+                
                 int operation = 0;
                 JsonObject jsonObject = null;
-                
-                JsonObject json = new JsonObject();
                 Gson gson = new Gson();
-                if(inputLine != null) {
-                	jsonObject = gson.fromJson(inputLine, JsonObject.class);
+                jsonObject = gson.fromJson(inputLine, JsonObject.class);
+                if(jsonObject.get("id_operacao") != null) 
                 	operation = jsonObject.get("id_operacao").getAsInt();
-                }
-                
-                JBCrypt bcrypt = new JBCrypt();
 
                 switch (operation){
-	                case 1:{ // Cadastrar
+	                case 1:{ // Register
+	                	
 	                	UserLogic userLogic = new UserLogic(jsonObject);
 	                	try {
 	                		outputLine = userLogic.userRegister();
@@ -89,29 +86,25 @@ public class EchoServer extends Thread {
 	                	break;
 	                }
                     case 3: { // Login
-                    	String email = jsonObject.get("email").getAsString();
-                    	String senha = jsonObject.get("senha").getAsString();
                     	
                     	UserLogic userLogic = new UserLogic(jsonObject);
 	                	try {
-	                		outputLine = userLogic.userLogin(email, senha);
+	                		outputLine = userLogic.userLogin();
 	                	}catch(SQLException | IOException e) {
 	            			System.out.println(e.getMessage());
 	                	}
 	                	
                         break;
                     }
-                    case 9: {
-                    	String token = jsonObject.get("token").getAsString();
-                    	int id_usuario = jsonObject.get("id_usuario").getAsInt();
+                    case 9: { // logout
                     	
                     	UserLogic userLogic = new UserLogic(jsonObject);
-                    	
                     	try {
-	                		outputLine = userLogic.userLogout(token, id_usuario);
+	                		outputLine = userLogic.userLogout();
 	                	}catch(SQLException | IOException e) {
 	            			System.out.println(e.getMessage());
 	                	}
+                    	
                     	break;
                     }
                     default:{

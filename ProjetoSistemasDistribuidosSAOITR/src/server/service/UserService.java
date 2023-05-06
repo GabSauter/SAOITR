@@ -34,4 +34,9 @@ public class UserService {
 		Connection conn = Database.connect();
 		new UserDAO(conn).logout(token, id_usuario);
 	}
+	
+	public boolean emailAlreadyExists(String email) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		return new UserDAO(conn).emailAlreadyExists(email);
+	}
 }
