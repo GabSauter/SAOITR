@@ -21,6 +21,7 @@ public class UserLogic {
 	public String userRegister() throws SQLException, IOException {
 		this.user = new User();
 		
+		//Fazer um if json.get() != null
 		user.setName(json.get("nome").getAsString());
 		user.setEmail(json.get("email").getAsString());
 		user.setPassword(json.get("senha").getAsString());

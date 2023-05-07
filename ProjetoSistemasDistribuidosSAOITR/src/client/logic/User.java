@@ -1,5 +1,6 @@
 package client.logic;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class User {
@@ -18,26 +19,63 @@ public class User {
 		this.email = email;
 		this.password = password;
 		
-		json.addProperty("id_operacao", 1);
+		json.addProperty("id_operacao", 3);
 		json.addProperty("email", this.email);
-		json.addProperty("password", this.password);
+		json.addProperty("senha", this.password);
 		
 		return json.toString();
 	}
 	
-	public String cadastrar(String name, String email, String password) {
+	public void loginResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        
+        if(jsonObject != null) {
+        	int codigo = jsonObject.get("codigo").getAsInt();
+        	
+        	if(codigo == 200) {
+        		this.setId_usuario(jsonObject.get("id_usuario").getAsInt());
+        		this.setToken(jsonObject.get("token").getAsString());
+        		this.setEstaLogado(true);
+        	}else {
+        		System.out.println(jsonObject.get("mensagem").getAsString());
+        	}
+        }else {
+        	System.out.println("Erro de login: JsonObject ta null");
+        }
+    	
+	}
+
+	public String register(String name, String email, String password) {
 		JsonObject json = new JsonObject();
 		
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		
-		json.addProperty("id_operacao", 2);
+		json.addProperty("id_operacao", 1);
 		json.addProperty("nome", this.name);
 		json.addProperty("email", this.email);
-		json.addProperty("password", this.password);
+		json.addProperty("senha", this.password);
 		
 		return json.toString();
+	}
+	
+	public void registerResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Cadastrado com sucesso");
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Cadastro: JsonObject ta null");
+        }
 	}
 	
 	public String logout() {
@@ -46,6 +84,10 @@ public class User {
 		json.addProperty("id_operacao", 9);
 		json.addProperty("token", this.token);
 		json.addProperty("id_usuario", this.id_usuario);
+		
+		this.setEstaLogado(false);
+		this.setToken("");
+		this.setId_usuario(0);
 		
 		return json.toString();
 	}
@@ -96,5 +138,11 @@ public class User {
 
 	public void setEstaLogado(boolean estaLogado) {
 		this.estaLogado = estaLogado;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", email=" + email + ", password=" + password + ", token=" + token
+				+ ", id_usuario=" + id_usuario + ", estaLogado=" + estaLogado + "]";
 	}
 }
