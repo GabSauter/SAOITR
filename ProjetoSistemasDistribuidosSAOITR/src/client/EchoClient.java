@@ -2,9 +2,8 @@ package client;
 
 import java.io.*;
 import java.net.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import client.cryptography.CaesarCipher;
 import client.logic.User;
 
@@ -38,7 +37,6 @@ public class EchoClient {
         Scanner input = new Scanner(System.in);
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String userInput = "";
-        Gson gson = new Gson();
         User user = new User();
 
         boolean estaAberto = true;
@@ -47,10 +45,16 @@ public class EchoClient {
         
         do {
             System.out.println("Escolha qual operacao voce deseja fazer: \n 1. Cadastrar\n 3. Logar\n 9. Logout\n 50. Fechar");
-            operation = (int) input.nextInt();
+            try {
+            	operation = (int) input.nextInt();
+            }catch(InputMismatchException e) {
+            	System.out.println("Por favor escreva um número e não uma string");
+            	operation = -1;
+            }
             input.nextLine();
             switch (operation){
                 case 1: {
+                	userInput="";
                 	System.out.println("Cliente: Operação de cadastro");
                 	
             		System.out.println("Nome: ");
@@ -67,35 +71,49 @@ public class EchoClient {
                 	break;
                 }
                 case 3: {
-                	System.out.println("Cliente: Operação de login");
-                	
-                    System.out.println("Email: ");
-                    String email = stdIn.readLine();
-
-                    System.out.println("Senha: ");
-                    String password = stdIn.readLine();
-                    password = new CaesarCipher().encrypt(password);
-                    userInput = new User().login(email, password);
+                	userInput="";
+                	if(!user.isEstaLogado()) {
+                		System.out.println("Cliente: Operação de login");
+                		
+                		System.out.println("Email: ");
+                		String email = stdIn.readLine();
+                		
+                		System.out.println("Senha: ");
+                		String password = stdIn.readLine();
+                		password = new CaesarCipher().encrypt(password);
+                		userInput = new User().login(email, password);
+                	}else {
+                		System.out.println("Você ja está logado. De um logout se quiser logar denovo.");
+                		operation = -1;
+                	}
                     
 	            	break;
                 }
                 case 9: {
+                	userInput="";
                     System.out.println("Cliente: Operação de logout");
                 	userInput = user.logout();
                 	break;
                 }
                 case 50: {
+                	userInput="";
                 	System.out.println("Fechando...");
                     estaAberto = false;
                     break;
+                }
+                default : {
+                	System.out.println("Operação inválida");
+                	operation = -1;
                 }
             }
             
             if(!estaAberto)
             	break;
             
-            System.out.println("Envia para o servidor: " + userInput);
-            out.println(userInput);
+            if(operation != -1) {
+            	System.out.println("Envia para o servidor: " + userInput);
+                out.println(userInput);
+            }
             
             String inputLine = "";
             try {
@@ -115,6 +133,10 @@ public class EchoClient {
             		System.out.println(user);
             		break;
             	}
+            	case 9:{
+            		user.logoutResponse(inputLine);
+            		break;
+            	}
             }
 
         } while (estaAberto);
@@ -125,6 +147,8 @@ public class EchoClient {
         stdIn.close();
         echoSocket.close();
     }
+    
+    
 }
 
 

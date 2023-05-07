@@ -70,8 +70,9 @@ public class EchoServer extends Thread {
                 JsonObject jsonObject = null;
                 Gson gson = new Gson();
                 jsonObject = gson.fromJson(inputLine, JsonObject.class);
-                if(jsonObject.get("id_operacao") != null) 
-                	operation = jsonObject.get("id_operacao").getAsInt();
+                if(jsonObject != null)
+                	if(jsonObject.get("id_operacao") != null) 
+                		operation = jsonObject.get("id_operacao").getAsInt();
 
                 switch (operation){
 	                case 1:{ // Register
@@ -109,6 +110,7 @@ public class EchoServer extends Thread {
                     }
                     default:{
                     	System.out.println("Operação inválida");
+                    	outputLine = "";
                     }
                     
                 }

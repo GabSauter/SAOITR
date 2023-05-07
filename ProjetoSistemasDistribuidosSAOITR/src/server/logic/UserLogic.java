@@ -2,6 +2,8 @@ package server.logic;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import server.entities.User;
 import server.logic.validation.UserValidation;
@@ -39,6 +41,7 @@ public class UserLogic {
 	public String userLogin() throws SQLException, IOException {
 		this.user = new User();
 		
+		//Colocar ifs e no else retornar um createResultJson(erro)
 		String email = json.get("email").getAsString();
 		String password = json.get("senha").getAsString();
 		
@@ -60,18 +63,22 @@ public class UserLogic {
 	public String userLogout() throws SQLException, IOException {
 		this.user = new User();
 		
-		String token = json.get("token").getAsString();
-    	int id_usuario = json.get("id_usuario").getAsInt();
-		
-		this.user = new User();
-		user.setToken(token);
-		user.setIdUsuario(id_usuario);
-		
-		if(token.equals("")) // Quer dizer que não esta logado
+		if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null) {
+			String token = json.get("token").getAsString();
+			int id_usuario = json.get("id_usuario").getAsInt();
+			
+			this.user = new User();
+			user.setToken(token);
+			user.setIdUsuario(id_usuario);
+			
+			if(token.equals("")) // Quer dizer que não esta logado
+				return createResultJson(9, false);
+			
+			new UserService().logout(token, id_usuario);	
+			return createResultJson(9, true);
+		}else {
 			return createResultJson(9, false);
-		
-		new UserService().logout(token, id_usuario);	
-		return createResultJson(9, true);
+		}
 	}
 	
 	private String createResultJson(int idOperacao, boolean correct) {

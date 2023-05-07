@@ -85,11 +85,28 @@ public class User {
 		json.addProperty("token", this.token);
 		json.addProperty("id_usuario", this.id_usuario);
 		
-		this.setEstaLogado(false);
 		this.setToken("");
 		this.setId_usuario(0);
 		
 		return json.toString();
+	}
+	
+	public void logoutResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Logout feito com sucesso");
+	    		this.setEstaLogado(false);
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Logout: JsonObject ta null");
+        }
 	}
 
 	public String getName() {
