@@ -22,9 +22,6 @@ public class UserRegisterLayout extends JFrame {
 	private JLabel lblNewLabel_3;
 	private JButton btnRegisterUser;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -38,9 +35,6 @@ public class UserRegisterLayout extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public UserRegisterLayout() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 310, 248);

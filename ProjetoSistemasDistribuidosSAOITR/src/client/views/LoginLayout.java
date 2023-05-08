@@ -18,9 +18,6 @@ public class LoginLayout extends JFrame {
 	private JTextField txtFieldEmail;
 	private JPasswordField txtFieldPassword;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,9 +31,6 @@ public class LoginLayout extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public LoginLayout() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 307, 207);

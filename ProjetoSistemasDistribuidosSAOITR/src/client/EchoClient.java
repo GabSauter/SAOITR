@@ -155,8 +155,6 @@ public class EchoClient {
         stdIn.close();
         echoSocket.close();
     }
-    
-    
 }
 
 

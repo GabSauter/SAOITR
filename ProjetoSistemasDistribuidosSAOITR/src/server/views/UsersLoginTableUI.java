@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
-import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 
@@ -13,9 +12,6 @@ public class UsersLoginTableUI {
 	private JFrame frmServerTabelaDe;
 	private JTable loginTable;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -29,16 +25,10 @@ public class UsersLoginTableUI {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public UsersLoginTableUI() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frmServerTabelaDe = new JFrame();
 		frmServerTabelaDe.setTitle("Server: Tabela de usuários logados");
