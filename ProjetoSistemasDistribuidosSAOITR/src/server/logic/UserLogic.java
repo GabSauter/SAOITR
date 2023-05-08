@@ -23,61 +23,77 @@ public class UserLogic {
 	public String userRegister() throws SQLException, IOException {
 		this.user = new User();
 		
-		//Fazer um if json.get() != null
-		user.setName(json.get("nome").getAsString());
-		user.setEmail(json.get("email").getAsString());
-		user.setPassword(json.get("senha").getAsString());
-		user.setToken("");
-		
-		if(userValidation.registerValidation(this.user)) {
-        	new UserService().register(user);
-        	return createResultJson(1, true);
-		}else {
-			return createResultJson(1, false);
+		try {
+			if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
+				user.setName(json.get("nome").getAsString());
+				user.setEmail(json.get("email").getAsString());
+				user.setPassword(json.get("senha").getAsString());
+				user.setToken("");
+				
+				if(userValidation.registerValidation(this.user)) {
+		        	new UserService().register(user);
+		        	return createResultJson(1, true);
+				}else {
+					return createResultJson(1, false);
+				}
+			}
+		}catch(Exception e) {
+			return createResultJson(1, false);			
 		}
-		
+		return createResultJson(1, false);	
 	}
 	
 	public String userLogin() throws SQLException, IOException {
 		this.user = new User();
 		
-		//Colocar ifs e no else retornar um createResultJson(erro)
-		String email = json.get("email").getAsString();
-		String password = json.get("senha").getAsString();
-		
-		user.setEmail(email);
-		user.setPassword(json.get("senha").getAsString());
-		
-		if(userValidation.loginValidation(user)) {
-			this.user = new UserService().searchLogin(email, password);
-			if(user == null) {
-				return createResultJson(3, false);
-			}else {
-				return createResultJson(3, true);
+		try {
+			String email = json.get("email").getAsString();
+			String password = json.get("senha").getAsString();
+			
+			user.setEmail(email);
+			user.setPassword(password);
+			
+			if(userValidation.loginValidation(user)) {
+				this.user = new UserService().searchLogin(email, password);
+				if(user == null) {
+					System.out.println("User null");
+					return createResultJson(3, false);
+				}else {
+					System.out.println("certo");
+					return createResultJson(3, true);
+				}
 			}
+			System.out.println("Erro de validação");
+			return createResultJson(3, false);
+		}catch(Exception e) {
+			System.out.println("json null" + json);
+			return createResultJson(3, false);
 		}
 		
-		return createResultJson(3, false);
 	}
 	
 	public String userLogout() throws SQLException, IOException {
 		this.user = new User();
 		
-		if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null) {
-			String token = json.get("token").getAsString();
-			int id_usuario = json.get("id_usuario").getAsInt();
-			
-			this.user = new User();
-			user.setToken(token);
-			user.setIdUsuario(id_usuario);
-			
-			if(token.equals("")) // Quer dizer que não esta logado
+		try {
+			if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null) {
+				String token = json.get("token").getAsString();
+				int id_usuario = json.get("id_usuario").getAsInt();
+				
+				this.user = new User();
+				user.setToken(token);
+				user.setIdUsuario(id_usuario);
+				
+				if(token.equals("")) // Quer dizer que não esta logado
+					return createResultJson(9, false);
+				
+				new UserService().logout(token, id_usuario);	
+				return createResultJson(9, true);
+			}else {
 				return createResultJson(9, false);
-			
-			new UserService().logout(token, id_usuario);	
-			return createResultJson(9, true);
-		}else {
-			return createResultJson(9, false);
+			}
+		}catch(Exception e) {
+			return createResultJson(9, false);			
 		}
 	}
 	

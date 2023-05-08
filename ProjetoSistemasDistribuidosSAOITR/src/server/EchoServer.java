@@ -5,6 +5,8 @@ import java.net.*;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
 import server.logic.UserLogic;
 
 import java.io.*;
@@ -17,7 +19,8 @@ public class EchoServer extends Thread {
         ServerSocket serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(23000);
+            //serverSocket = new ServerSocket(23000);
+            serverSocket = new ServerSocket(24001);
             System.out.println ("Connection Socket Created");
             try {
                 while (true){
@@ -53,11 +56,13 @@ public class EchoServer extends Thread {
 
     public void run(){
         System.out.println ("New Communication Thread Started");
-
         try {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
+        	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
             BufferedReader in = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
-
+            
+            try {
+            	
+            
             String inputLine;
             String outputLine = "";
 
@@ -69,11 +74,12 @@ public class EchoServer extends Thread {
                 int operation = 0;
                 JsonObject jsonObject = null;
                 Gson gson = new Gson();
+                
                 jsonObject = gson.fromJson(inputLine, JsonObject.class);
                 if(jsonObject != null)
                 	if(jsonObject.get("id_operacao") != null) 
                 		operation = jsonObject.get("id_operacao").getAsInt();
-
+                
                 switch (operation){
 	                case 1:{ // Register
 	                	
@@ -110,7 +116,10 @@ public class EchoServer extends Thread {
                     }
                     default:{
                     	System.out.println("Operação inválida");
-                    	outputLine = "";
+                    	JsonObject json = new JsonObject();
+                    	json.addProperty("codigo", 500);
+    					json.addProperty("mensagem", "Houve um erro id operação.");
+                    	outputLine = json.toString();
                     }
                     
                 }
@@ -118,6 +127,14 @@ public class EchoServer extends Thread {
                 System.out.println("Envia para o cliente: " + outputLine);
                 System.out.println("-------------------------------------------------------------------------------------------");
                 out.println(outputLine);
+            }
+            }catch(JsonSyntaxException e) {
+            	JsonObject json = new JsonObject();
+            	json.addProperty("codigo", 500);
+				json.addProperty("mensagem", "Houve um erro com json null.");
+				System.out.println("Envia para o cliente: " + json.toString());
+                System.out.println("-------------------------------------------------------------------------------------------");
+            	out.println(json.toString());
             }
 
             out.close();

@@ -10,7 +10,10 @@ import client.logic.User;
 public class EchoClient {
     public static void main(String[] args) throws IOException {
 
-        String serverHostname = "127.0.0.1";
+        //String serverHostname = "127.0.0.1";
+        //String serverHostname = "26.20.133.105"; //Lukas
+        String serverHostname = "26.10.188.162"; //ruivo
+        //String serverHostname = "26.59.167.57"; //Salles
     	//String serverHostname = "10.20.8.179";
     	
         if (args.length > 0)
@@ -23,7 +26,8 @@ public class EchoClient {
 
         try {
             //echoSocket = new Socket(serverHostname, 10008);
-        	echoSocket = new Socket(serverHostname, 23000);
+        	//echoSocket = new Socket(serverHostname, 23000);
+        	echoSocket = new Socket(serverHostname, 24001);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (UnknownHostException e) {
@@ -112,7 +116,8 @@ public class EchoClient {
             
             if(operation != -1) {
             	System.out.println("Envia para o servidor: " + userInput);
-                out.println(userInput);
+                //out.println(userInput);
+            	out.println((String) null);
             }
             
             String inputLine = "";
@@ -136,6 +141,9 @@ public class EchoClient {
             	case 9:{
             		user.logoutResponse(inputLine);
             		break;
+            	}
+            	default:{
+            		input.nextLine();
             	}
             }
 
