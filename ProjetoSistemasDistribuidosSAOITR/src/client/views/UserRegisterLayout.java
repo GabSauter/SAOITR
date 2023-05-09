@@ -11,6 +11,8 @@ import java.awt.Font;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class UserRegisterLayout extends JFrame {
 
@@ -36,6 +38,11 @@ public class UserRegisterLayout extends JFrame {
 	}
 
 	public UserRegisterLayout() {
+		this.initComponents();
+		
+	}
+	
+	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 310, 248);
 		contentPane = new JPanel();
@@ -74,6 +81,11 @@ public class UserRegisterLayout extends JFrame {
 		contentPane.add(txtFieldPassword);
 		
 		btnBack = new JButton("<");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnBackAction();
+			}
+		});
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnBack.setBounds(10, 11, 46, 23);
 		contentPane.add(btnBack);
@@ -85,7 +97,20 @@ public class UserRegisterLayout extends JFrame {
 		contentPane.add(lblNewLabel_3);
 		
 		btnRegisterUser = new JButton("Cadastrar");
+		btnRegisterUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnRegisterUserAction();
+			}
+		});
 		btnRegisterUser.setBounds(10, 163, 89, 23);
 		contentPane.add(btnRegisterUser);
+	}
+	
+	private void btnRegisterUserAction() {
+		
+	}
+	
+	private void btnBackAction() {
+		
 	}
 }

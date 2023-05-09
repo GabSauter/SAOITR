@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class HomeLayout extends JFrame {
 
@@ -27,6 +29,10 @@ public class HomeLayout extends JFrame {
 	}
 
 	public HomeLayout() {
+		this.initComponents();
+	}
+	
+	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 498, 350);
 		contentPane = new JPanel();
@@ -41,8 +47,17 @@ public class HomeLayout extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnLogoutAction();
+			}
+		});
 		btnLogout.setBounds(206, 277, 89, 23);
 		contentPane.add(btnLogout);
+	}
+	
+	private void btnLogoutAction() {
+		
 	}
 
 }

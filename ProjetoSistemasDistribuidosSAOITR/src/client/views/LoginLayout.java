@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoginLayout extends JFrame {
 
@@ -32,6 +34,10 @@ public class LoginLayout extends JFrame {
 	}
 
 	public LoginLayout() {
+		this.initComponents();
+	}
+	
+	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 307, 207);
 		contentPane = new JPanel();
@@ -56,10 +62,20 @@ public class LoginLayout extends JFrame {
 		contentPane.add(txtSenha);
 		
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnSubmitAction();
+			}
+		});
 		btnSubmit.setBounds(36, 114, 105, 23);
 		contentPane.add(btnSubmit);
 		
 		JButton btnCreateAccount = new JButton("Cadastrar");
+		btnCreateAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnCreateAccountAction();
+			}
+		});
 		btnCreateAccount.setBounds(146, 114, 105, 23);
 		contentPane.add(btnCreateAccount);
 		
@@ -72,5 +88,13 @@ public class LoginLayout extends JFrame {
 		txtFieldPassword = new JPasswordField();
 		txtFieldPassword.setBounds(92, 84, 159, 20);
 		contentPane.add(txtFieldPassword);
+	}
+	
+	private void btnSubmitAction() {
+		
+	}
+	
+	private void btnCreateAccountAction() {
+		
 	}
 }
