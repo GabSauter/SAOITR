@@ -138,7 +138,6 @@ public class EchoServer extends Thread {
 			clientSocket.close();
 		} catch (IOException e) {
 			System.err.println("Problem with Communication Server");
-			// System.exit(1);
 		}
 	}
 }

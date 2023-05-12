@@ -17,6 +17,7 @@ public class UserDAO {
 	}
 	
 	public void register(User user) throws SQLException {
+		System.out.println("banana4");
 		PreparedStatement st = null;
 		
 		try {
@@ -56,7 +57,7 @@ public class UserDAO {
 		
 		try {
 			st2 = conn.prepareStatement("update user set token = ? where email = ? and password = ?");
-			st2.setString(1, "token123");
+			st2.setString(1, "ljfA/kfjdls@jfkds*djfls");
 			st2.setString(2, email);
 			st2.setString(3, password);
 			

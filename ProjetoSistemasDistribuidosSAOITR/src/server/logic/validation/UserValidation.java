@@ -22,6 +22,7 @@ public class UserValidation {
 		   user.getEmail().length() < 16 || user.getEmail().length() > 50 ||
 		   user.getPassword().length() < 8 || user.getPassword().length() > 255 ||
 		   !user.getEmail().contains("@") ||
+		   user.getName().matches("[0-9]+")||
 		   new UserService().emailAlreadyExists(user.getEmail()))
 			return false;
 		

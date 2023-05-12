@@ -34,12 +34,15 @@ public class UserLogic {
 		        	new UserService().register(user);
 		        	return createResultJson(1, true);
 				}else {
+					System.out.println("Erro 1 - Erro de validação");
 					return createResultJson(1, false);
 				}
 			}
 		}catch(Exception e) {
-			return createResultJson(1, false);			
+			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
+			return createResultJson(11, false);			
 		}
+		System.out.println("Erro 3 - Erro estranho");
 		return createResultJson(1, false);	
 	}
 	
@@ -110,6 +113,12 @@ public class UserLogic {
 					json.addProperty("codigo", 500);
 					json.addProperty("mensagem", "Houve um erro de validação no cadastro.");
 				}
+				return json.toString();
+			}
+			case 11:{
+				json.addProperty("codigo", 500);
+				json.addProperty("mensagem", "Houve um erro de exceção, talvez o banco de dados não está rodando.");
+				
 				return json.toString();
 			}
 			case 3: {

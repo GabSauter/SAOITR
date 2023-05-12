@@ -11,6 +11,7 @@ import server.entities.User;
 public class UserService {
 	
 	public void register(User user) throws SQLException, IOException {
+		//System.out.println("banana3");
 		Connection conn = Database.connect();
 		new UserDAO(conn).register(user);
 	}
