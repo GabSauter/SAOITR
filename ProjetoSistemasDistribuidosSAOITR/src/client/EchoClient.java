@@ -129,7 +129,6 @@ public class EchoClient {
             	}
             	case 3: {
             		user.loginResponse(inputLine);
-            		System.out.println(user);
             		break;
             	}
             	case 9:{

@@ -6,17 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gson">
+	<classpathentry kind="lib" path="java-libs/gson/gson-2.10.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jbcrypt">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jdbc">
+	<classpathentry kind="lib" path="java-libs/jdbc-connectors/mysql-connector-j-8.0.32.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
