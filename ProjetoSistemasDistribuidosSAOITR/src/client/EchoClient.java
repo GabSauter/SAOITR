@@ -71,7 +71,7 @@ public class EchoClient {
                 }
                 case 3: {
                 	userInput="";
-                	//if(!user.isEstaLogado()) {
+                	if(!user.isEstaLogado()) {
                 		System.out.println("Cliente: Operação de login");
                 		
                 		System.out.println("Email: ");
@@ -81,10 +81,9 @@ public class EchoClient {
                 		String password = stdIn.readLine();
                 		password = new CaesarCipher().encrypt(password);
                 		userInput = new User().login(email, password);
-//                	}else {
-//                		System.out.println("Você ja está logado. De um logout se quiser logar denovo.");
-//                		operation = -1;
-//                	}
+                	}else {
+                		System.out.println("Você ja está logado. De um logout se quiser logar denovo.");
+                	}
                     
 	            	break;
                 }
@@ -96,13 +95,12 @@ public class EchoClient {
                 }
                 case 50: {
                 	userInput="";
-                	System.out.println("Fechando...");
+                	System.out.println("Fechado...");
                     estaAberto = false;
                     break;
                 }
                 default : {
                 	System.out.println("Operação inválida");
-                	operation = -1;
                 }
             }
             if(!estaAberto)
@@ -137,11 +135,10 @@ public class EchoClient {
             		break;
             	}
             	default:{
-            		System.out.println("teste");
-            		input.nextLine();
+            		System.out.println("Tente novamente");
             	}
             }
-
+            
         } while (estaAberto);
 
         out.close();

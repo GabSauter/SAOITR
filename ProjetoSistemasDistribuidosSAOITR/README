@@ -1,21 +1,31 @@
 Primeiro passo: Conectar com o mySQL
 
 	Para executar essa aplicação é necessário rodar o MySQL.
-	Nessa aplicação eu utilizei o Xampp, rodando o Apache e o MySQL.
 	
-	Se estiver usando o Xampp, após rodar o Apache e o MySQL é possível acessar o banco de dados em: http://localhost/phpmyadmin/
+	Utilizando o Xampp:
+		Nessa aplicação eu utilizei o Xampp, rodando o Apache e o MySQL.
+		Se estiver usando o Xampp, após rodar o Apache e o MySQL é possível acessar o banco de dados em: http://localhost/phpmyadmin/
+		Em http://localhost/phpmyadmin/ aperte em Novo insira saoitrdb em Nome do Banco de Dados e depois selecione: utf8mb4_general_ci e depois clique em Criar
+		Selecione o saoitrdb e aperte em Importar > Escolher Arquivo e selecione o arquivo saoitrdb.sql que esta em ProjetoSistemasDistribuidos/database/saoitrdb.sql lá deverá aparecer a tabela user.
 	
-	MySQL deve rodar na porta 3306
-	O nome do banco de dados deve ser saoitrdb
-	O user do MySQL deve ser "root" e a senha "".
+	Caso não esteja usando o Xampp, crie o banco de dados saoitrdb importe o arquivo saoitrdb.sql que esta em ProjetoSistemasDistribuidos/database/saoitrdb.sql em seu aplicativo de escolha, lá deverá aparecer a tabela user.
+	
+	No Xampp quando baixa o MySQL vem de padrão os seguintes itens:
+		MySQL na porta 3306
+		O user do MySQL "root" e a senha "".
 	
 	Caso esteja rodando o MySQL em outra porta ou o nome ou a senha do mySQL ou o nome do banco de dados seja outra, é possível mudar os campos no arquivo database.properties em ProjetoSistemasDistribuidosSAOITR/database.properties
 	
 	O arquivo database.properties esta assim:
-	
 		user=root
 		password=
 		dburl=jdbc:mysql://localhost:3306/saoitrdb
+		useSSL=false
+		
+	Caso sua configuração do MySQL estiver diferente use isso como base:
+		user={insiraAquiONomeDeUsuarioDoMySQL}
+		password={insiraAquiASenhaDeUsuarioDoMySQL}
+		dburl=jdbc:mysql://localhost:{AquiAPortaDoMySQL}/{NomeDoBancoDeDados}
 		useSSL=false
 	
 	Agora que o banco de dados está configurado é possível rodar o servidor.
@@ -30,3 +40,6 @@ Terceiro passo: Rodar o cliente
 	Para rodar o cliente  basta ir na classe EchoCliente.java em ProjetoSistemasDistribuidosSAOITR/src/client/EchoClient.java
 	Note que o cliente está configurado para rodar em "127.0.0.1" ou seja na própia máquina.
 	Note que o cliente está configurado para conectar com servidor na porta 24001.
+	
+	
+	
