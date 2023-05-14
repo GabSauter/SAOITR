@@ -11,19 +11,8 @@ import server.entities.User;
 public class UserService {
 	
 	public void register(User user) throws SQLException, IOException {
-		//System.out.println("banana3");
 		Connection conn = Database.connect();
 		new UserDAO(conn).register(user);
-	}
-	
-	public void searchAll(User user) throws SQLException, IOException {
-		Connection conn = Database.connect();
-		new UserDAO(conn).searchAll();
-	}
-	
-	public void deleteUser(int id_user) throws SQLException, IOException {
-		Connection conn = Database.connect();
-		new UserDAO(conn).delete(id_user);
 	}
 	
 	public User searchLogin(String email, String password) throws SQLException, IOException {

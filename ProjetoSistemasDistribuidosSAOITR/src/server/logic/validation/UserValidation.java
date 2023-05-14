@@ -28,4 +28,11 @@ public class UserValidation {
 		
 		return true;
 	}
+	
+	public boolean logoutValidation(User user) throws SQLException, IOException {
+		if(user.getToken().length() < 16 || user.getToken().length() > 36)
+			return false;
+		
+		return true;
+	}
 }

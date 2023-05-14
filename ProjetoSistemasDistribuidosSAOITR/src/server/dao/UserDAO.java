@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.UUID;
 
 import server.entities.User;
 
@@ -35,20 +35,6 @@ public class UserDAO {
 		}
 	}
 	
-	public List<User> searchAll() {
-
-		return null;
-	}
-	
-	public void update(User user) {
-		
-	}
-	
-	public int delete(int id_usuario) {
-		
-		return 0;
-	}
-	
 	public User searchLogin(String email, String password) throws SQLException {
 		
 		PreparedStatement st = null;
@@ -57,7 +43,7 @@ public class UserDAO {
 		
 		try {
 			st2 = conn.prepareStatement("update user set token = ? where email = ? and password = ?");
-			st2.setString(1, "ljfA/kfjdls@jfkds*djfls");
+			st2.setString(1, UUID.randomUUID().toString().replaceAll("-", "")); //Token sempre da 32 character
 			st2.setString(2, email);
 			st2.setString(3, password);
 			
@@ -96,9 +82,10 @@ public class UserDAO {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("update user set token = ? where id = ?");
+			st = conn.prepareStatement("update user set token = ? where id = ? and token = ?");
 			st.setString(1, "");
 			st.setInt(2, id_usuario);
+			st.setString(3, token);
 			
 			st.executeUpdate();
 		} finally {

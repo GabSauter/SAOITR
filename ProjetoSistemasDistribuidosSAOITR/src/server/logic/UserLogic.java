@@ -90,8 +90,11 @@ public class UserLogic {
 				if(token.equals("")) // Quer dizer que não esta logado
 					return createResultJson(9, false);
 				
-				new UserService().logout(token, id_usuario);	
-				return createResultJson(9, true);
+				if(userValidation.logoutValidation(user)){
+					new UserService().logout(token, id_usuario);	
+					return createResultJson(9, true);
+				}
+				return createResultJson(9, false);
 			}else {
 				return createResultJson(9, false);
 			}
