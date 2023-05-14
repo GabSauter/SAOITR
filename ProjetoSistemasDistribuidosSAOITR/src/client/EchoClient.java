@@ -15,7 +15,7 @@ public class EchoClient {
     	
         if (args.length > 0)
             serverHostname = args[0];
-        System.out.println ("Attempting to connect to host " + serverHostname + " on port 10008.");
+        System.out.println ("Attempting to connect to host " + serverHostname + " on port 24001.");
 
         Socket echoSocket = null;
         PrintWriter out = null;
@@ -105,22 +105,23 @@ public class EchoClient {
                 	operation = -1;
                 }
             }
-            
             if(!estaAberto)
             	break;
+            
+            String inputLine = "";
             
             if(operation != -1) {
             	System.out.println("Envia para o servidor: " + userInput);
                 out.println(userInput);
+                
+                try {
+                	inputLine = in.readLine();
+                	System.out.println("Recebe do servidor: " + inputLine);
+                }catch(Exception e){
+                	System.out.println(e);
+                }
             }
             
-            String inputLine = "";
-            try {
-            	inputLine = in.readLine();
-            	System.out.println("Recebe do servidor: " + inputLine);
-            }catch(Exception e){
-            	System.out.println(e);
-            }
                 
             switch(operation) {
             	case 1: {
@@ -136,7 +137,8 @@ public class EchoClient {
             		break;
             	}
             	default:{
-            		//input.nextLine();
+            		System.out.println("teste");
+            		input.nextLine();
             	}
             }
 

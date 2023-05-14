@@ -75,47 +75,46 @@ public class EchoServer extends Thread {
 							operation = jsonObject.get("id_operacao").getAsInt();
 
 					switch (operation) {
-					case 1: { // Register
-
-						UserLogic userLogic = new UserLogic(jsonObject);
-						try {
-							outputLine = userLogic.userRegister();
-						} catch (SQLException | IOException e) {
-							System.out.println(e.getMessage());
+						case 1: { // Register
+	
+							UserLogic userLogic = new UserLogic(jsonObject);
+							try {
+								outputLine = userLogic.userRegister();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
 						}
-
-						break;
-					}
-					case 3: { // Login
-
-						UserLogic userLogic = new UserLogic(jsonObject);
-						try {
-							outputLine = userLogic.userLogin();
-						} catch (SQLException | IOException e) {
-							System.out.println(e.getMessage());
+						case 3: { // Login
+	
+							UserLogic userLogic = new UserLogic(jsonObject);
+							try {
+								outputLine = userLogic.userLogin();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
 						}
-
-						break;
-					}
-					case 9: { // logout
-
-						UserLogic userLogic = new UserLogic(jsonObject);
-						try {
-							outputLine = userLogic.userLogout();
-						} catch (SQLException | IOException e) {
-							System.out.println(e.getMessage());
+						case 9: { // logout
+	
+							UserLogic userLogic = new UserLogic(jsonObject);
+							try {
+								outputLine = userLogic.userLogout();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
 						}
-
-						break;
-					}
-					default: {
-						System.out.println("Operação inválida");
-						JsonObject json = new JsonObject();
-						json.addProperty("codigo", 500);
-						json.addProperty("mensagem", "Houve um erro id operação.");
-						outputLine = json.toString();
-					}
-
+						default: {
+							System.out.println("Operação inválida");
+							JsonObject json = new JsonObject();
+							json.addProperty("codigo", 500);
+							json.addProperty("mensagem", "Houve um erro id operação.");
+							outputLine = json.toString();
+						}
 					}
 
 					System.out.println("Envia para o cliente: " + outputLine);
