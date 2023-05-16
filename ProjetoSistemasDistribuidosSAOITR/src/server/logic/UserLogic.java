@@ -42,7 +42,7 @@ public class UserLogic {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
 			return createResultJson(11, false);			
 		}
-		System.out.println("Erro 3 - Erro estranho");
+		System.out.println("Erro 3 - Erro com null");
 		return createResultJson(1, false);	
 	}
 	
@@ -50,29 +50,32 @@ public class UserLogic {
 		this.user = new User();
 		
 		try {
-			String email = json.get("email").getAsString();
-			String password = json.get("senha").getAsString();
-			
-			user.setEmail(email);
-			user.setPassword(password);
-			
-			if(userValidation.loginValidation(user)) {
-				this.user = new UserService().searchLogin(email, password);
-				if(user == null) {
-					System.out.println("User null");
-					return createResultJson(3, false);
-				}else {
-					System.out.println("certo");
-					return createResultJson(3, true);
+			if(json.get("email") != null && json.get("senha") != null) {
+				String email = json.get("email").getAsString();
+				String password = json.get("senha").getAsString();
+				
+				user.setEmail(email);
+				user.setPassword(password);
+				
+				if(userValidation.loginValidation(user)) {
+					this.user = new UserService().searchLogin(email, password);
+					if(user == null) {
+						System.out.println("User null");
+						return createResultJson(3, false);
+					}else {
+						System.out.println("certo");
+						return createResultJson(3, true);
+					}
 				}
+				System.out.println("Erro de validação");
+				return createResultJson(3, false);
 			}
-			System.out.println("Erro de validação");
-			return createResultJson(3, false);
 		}catch(Exception e) {
-			System.out.println("json null" + json);
+			System.out.println("json null ou banco de dados não está rodando");
 			return createResultJson(3, false);
 		}
-		
+		System.out.println("Erro 3 - Erro com json pegando null");
+		return createResultJson(3, false);
 	}
 	
 	public String userLogout() throws SQLException, IOException {
@@ -94,11 +97,14 @@ public class UserLogic {
 					new UserService().logout(token, id_usuario);	
 					return createResultJson(9, true);
 				}
+				System.out.println("Erro de validação no logout");
 				return createResultJson(9, false);
 			}else {
+				System.out.println("Erro de que envolve null");
 				return createResultJson(9, false);
 			}
 		}catch(Exception e) {
+			System.out.println("json null ou banco de dados não está rodando");
 			return createResultJson(9, false);			
 		}
 	}

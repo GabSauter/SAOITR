@@ -99,7 +99,7 @@ public class EchoClient {
                 }
                 case 50: {
                 	userInput="";
-                	System.out.println("Fechado...");
+                	System.out.println("Fechado");
                     estaAberto = false;
                     break;
                 }
