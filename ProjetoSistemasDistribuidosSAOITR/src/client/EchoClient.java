@@ -9,9 +9,13 @@ import client.logic.User;
 
 public class EchoClient {
     public static void main(String[] args) throws IOException {
-
-        //String serverHostname = "10.20.8.81";
-        String serverHostname = "127.0.0.1";
+    	
+    	Scanner input = new Scanner(System.in);
+    	
+    	System.out.println("Qual é o ip do servidor? (127.0.0.1 é o servidor local)");
+    	String serverHostname = input.nextLine();
+    	//String serverHostname = "10.20.8.81";
+        //String serverHostname = "127.0.0.1";
     	
         if (args.length > 0)
             serverHostname = args[0];
@@ -33,7 +37,7 @@ public class EchoClient {
             System.exit(1);
         }
 
-        Scanner input = new Scanner(System.in);
+        //Scanner input = new Scanner(System.in);
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String userInput = "";
         User user = new User();
