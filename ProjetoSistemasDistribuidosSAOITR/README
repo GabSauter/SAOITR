@@ -8,7 +8,9 @@ Primeiro passo: Conectar com o mySQL
 		Em http://localhost/phpmyadmin/ aperte em Novo insira saoitrdb em Nome do Banco de Dados e depois selecione: utf8mb4_general_ci e depois clique em Criar
 		Selecione o saoitrdb e aperte em Importar > Escolher Arquivo e selecione o arquivo saoitrdb.sql que esta em ProjetoSistemasDistribuidos/database/saoitrdb.sql lá deverá aparecer a tabela user.
 	
-	Caso não esteja usando o Xampp, crie o banco de dados saoitrdb importe o arquivo saoitrdb.sql que esta em ProjetoSistemasDistribuidos/database/saoitrdb.sql em seu aplicativo de escolha, lá deverá aparecer a tabela user.
+	Caso não esteja usando o Xampp:
+		Crie o banco de dados saoitrdb 
+		Importe o arquivo saoitrdb.sql que esta em ProjetoSistemasDistribuidos/database/saoitrdb.sql em seu aplicativo de escolha, lá deverá aparecer a tabela user.
 	
 	No Xampp quando baixa o MySQL vem de padrão os seguintes itens:
 		MySQL na porta 3306
