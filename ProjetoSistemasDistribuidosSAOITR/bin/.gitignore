@@ -1,2 +1,4 @@
 /client/
 /server/
+/.gitignore
+/module-info.class

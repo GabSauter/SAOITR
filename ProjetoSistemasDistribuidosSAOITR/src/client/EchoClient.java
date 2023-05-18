@@ -26,7 +26,8 @@ public class EchoClient {
         BufferedReader in = null;
 
         try {
-        	echoSocket = new Socket(serverHostname, 24001);
+        	System.out.println("Qual é a porta?");
+        	echoSocket = new Socket(serverHostname, input.nextInt());
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (UnknownHostException e) {

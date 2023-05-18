@@ -2,6 +2,8 @@ package server;
 
 import java.net.*;
 import java.sql.SQLException;
+import java.util.Scanner;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -16,30 +18,35 @@ public class EchoServer extends Thread {
 
 	public static void main(String[] args) throws IOException {
 		ServerSocket serverSocket = null;
-
-		try {
-			// serverSocket = new ServerSocket(23000);
-			serverSocket = new ServerSocket(24001);
-			System.out.println("Connection Socket Created");
+		
+		try (Scanner input = new Scanner(System.in)) {
 			try {
-				while (true) {
-					System.out.println("Waiting for Connection");
-					new EchoServer(serverSocket.accept());
+				System.out.println("Qual é a porta? (int)");
+				// serverSocket = new ServerSocket(23000);
+				serverSocket = new ServerSocket(input.nextInt());
+				input.nextLine();
+				System.out.println("Connection Socket Created");
+				try {
+					while (true) {
+						System.out.println("Waiting for Connection");
+						new EchoServer(serverSocket.accept());
+					}
+				} catch (IOException e) {
+					System.err.println("Accept failed.");
+					System.exit(1);
 				}
 			} catch (IOException e) {
-				System.err.println("Accept failed.");
+				System.err.println("Could not listen on port");
 				System.exit(1);
 			}
-		} catch (IOException e) {
-			System.err.println("Could not listen on port: 10008.");
-			System.exit(1);
-		} finally {
-			try {
-				assert serverSocket != null;
-				serverSocket.close();
-			} catch (IOException e) {
-				System.err.println("Could not close port: 10008.");
-				System.exit(1);
+			finally {
+				try {
+					assert serverSocket != null;
+					serverSocket.close();
+				} catch (IOException e) {
+					System.err.println("Could not close port");
+					System.exit(1);
+				}
 			}
 		}
 	}

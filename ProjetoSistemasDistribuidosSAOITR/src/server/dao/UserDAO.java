@@ -17,7 +17,6 @@ public class UserDAO {
 	}
 	
 	public void register(User user) throws SQLException {
-		System.out.println("banana4");
 		PreparedStatement st = null;
 		
 		try {
