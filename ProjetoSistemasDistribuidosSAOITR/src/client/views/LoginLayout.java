@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import client.cryptography.CaesarCipher;
+import client.logic.User;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -19,19 +23,21 @@ public class LoginLayout extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtFieldEmail;
 	private JPasswordField txtFieldPassword;
+	
+	private String userInput;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginLayout frame = new LoginLayout();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					LoginLayout frame = new LoginLayout();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public LoginLayout() {
 		this.initComponents();
@@ -91,10 +97,22 @@ public class LoginLayout extends JFrame {
 	}
 	
 	private void btnSubmitAction() {
+		String email = txtFieldEmail.getText().toString();
+		String password = txtFieldPassword.getPassword().toString();
 		
+		password = new CaesarCipher().encrypt(password);
+		setUserInput(new User().login(email, password));
 	}
 	
 	private void btnCreateAccountAction() {
 		
+	}
+
+	public String getUserInput() {
+		return userInput;
+	}
+
+	public void setUserInput(String userInput) {
+		this.userInput = userInput;
 	}
 }

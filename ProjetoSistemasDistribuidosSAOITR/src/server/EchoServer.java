@@ -7,7 +7,6 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import server.logic.UserLogic;
 
 import java.io.*;
@@ -17,6 +16,7 @@ public class EchoServer extends Thread {
 	protected Socket clientSocket;
 
 	public static void main(String[] args) throws IOException {
+        
 		ServerSocket serverSocket = null;
 		
 		try (Scanner input = new Scanner(System.in)) {

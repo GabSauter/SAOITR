@@ -8,8 +8,9 @@ import client.cryptography.CaesarCipher;
 import client.logic.User;
 
 public class EchoClient {
+	
     public static void main(String[] args) throws IOException {
-    	
+
     	Scanner input = new Scanner(System.in);
     	
     	System.out.println("Qual é o ip do servidor? (127.0.0.1 é o servidor local)");
