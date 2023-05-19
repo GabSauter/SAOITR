@@ -1,15 +1,18 @@
 package client.views;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import client.cryptography.CaesarCipher;
+import client.logic.SocketLogic;
 import client.logic.User;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
@@ -25,19 +28,6 @@ public class LoginLayout extends JFrame {
 	private JPasswordField txtFieldPassword;
 	
 	private String userInput;
-
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					LoginLayout frame = new LoginLayout();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	public LoginLayout() {
 		this.initComponents();
@@ -97,15 +87,35 @@ public class LoginLayout extends JFrame {
 	}
 	
 	private void btnSubmitAction() {
-		String email = txtFieldEmail.getText().toString();
-		String password = txtFieldPassword.getPassword().toString();
+		System.out.println("Cliente: Operação de login");
 		
+		String email = txtFieldEmail.getText().toString();
+		String password = String.valueOf(txtFieldPassword.getPassword());
 		password = new CaesarCipher().encrypt(password);
-		setUserInput(new User().login(email, password));
+		
+		userInput = new User().login(email, password);
+		String inputLine = new SocketLogic().sendAndReceive(userInput);
+		
+		User user = new User();
+		user.loginResponse(inputLine);
+		
+        JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
+        if(jsonObject != null) {
+        	int codigo = jsonObject.get("codigo").getAsInt();
+        	if(codigo == 200) {
+        		new HomeLayout(user).setVisible(true);
+    			this.dispose();
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de login", JOptionPane.ERROR_MESSAGE);
+        	}
+        }else {
+        	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de login", JOptionPane.ERROR_MESSAGE);
+        }
 	}
 	
 	private void btnCreateAccountAction() {
-		
+		new UserRegisterLayout().setVisible(true);
+		this.dispose();
 	}
 
 	public String getUserInput() {

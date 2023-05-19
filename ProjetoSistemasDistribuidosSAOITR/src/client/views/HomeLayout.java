@@ -5,7 +5,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import client.logic.SocketLogic;
+import client.logic.User;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -14,21 +22,11 @@ import java.awt.event.ActionEvent;
 public class HomeLayout extends JFrame {
 
 	private JPanel contentPane;
+	
+	private User user;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					HomeLayout frame = new HomeLayout();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public HomeLayout() {
+	public HomeLayout(User user) {
+		this.user = user;
 		this.initComponents();
 	}
 	
@@ -57,7 +55,31 @@ public class HomeLayout extends JFrame {
 	}
 	
 	private void btnLogoutAction() {
-		
+        System.out.println("Cliente: Operação de logout");
+    	String userInput = user.logout();
+    	
+    	String inputLine = new SocketLogic().sendAndReceive(userInput);
+    	user.logoutResponse(inputLine);
+    	
+    	Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Logout feito com sucesso");
+	    		this.user.setEstaLogado(false);
+	    		new LoginLayout().setVisible(true);
+    			this.dispose();
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    		JOptionPane.showMessageDialog(this, "Houve um erro durante o logout.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
+	    	}
+        }else {
+        	System.out.println("Logout: JsonObject ta null");
+        	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
+        }
 	}
 
 }

@@ -3,6 +3,9 @@ package client.views;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import client.logic.SocketLogic;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -12,9 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ConnectionLayout extends JFrame {
+	
+	private String ip;
+	private int port;
 
 	private JPanel contentPane;
 	private JTextField txtFieldPort;
+	private JFormattedTextField txtFieldIp;
+	private JLabel lblConnectionResult;
 	
 	public ConnectionLayout() {
 		initComponents();
@@ -42,6 +50,7 @@ public class ConnectionLayout extends JFrame {
 		txtFieldPort.setBounds(103, 39, 149, 20);
 		contentPane.add(txtFieldPort);
 		txtFieldPort.setColumns(10);
+		//Colocar Mask no ip
 		
 		JLabel lblIp = new JLabel("Server IP:");
 		lblIp.setBounds(21, 11, 80, 14);
@@ -51,18 +60,29 @@ public class ConnectionLayout extends JFrame {
 		lblPort.setBounds(21, 42, 80, 14);
 		contentPane.add(lblPort);
 		
-		JLabel lblConnectionResult = new JLabel("");
+		lblConnectionResult = new JLabel("");
 		lblConnectionResult.setVerticalAlignment(SwingConstants.TOP);
 		lblConnectionResult.setToolTipText("Result");
 		lblConnectionResult.setBounds(21, 104, 231, 49);
 		contentPane.add(lblConnectionResult);
 		
-		JFormattedTextField txtFieldIp = new JFormattedTextField();
+		txtFieldIp = new JFormattedTextField();
 		txtFieldIp.setBounds(103, 8, 149, 20);
 		contentPane.add(txtFieldIp);
 	}
 	
+	public void setTextLblConnectionResult(String text) {
+		this.lblConnectionResult.setText(text);
+	}
+
 	private void btnConnectAction() {
+		this.ip = txtFieldIp.getText().toString();
+		this.port = Integer.parseInt(txtFieldPort.getText().toString());
+		boolean isConnected = new SocketLogic().socketConnectClient(ip, port, this);
 		
+		if(isConnected) {
+			new LoginLayout().setVisible(true);
+			this.dispose();
+		}
 	}
 }

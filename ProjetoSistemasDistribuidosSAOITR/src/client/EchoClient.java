@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
 import client.cryptography.CaesarCipher;
 import client.logic.User;
 
@@ -17,6 +18,8 @@ public class EchoClient {
     	String serverHostname = input.nextLine();
     	//String serverHostname = "10.20.8.81";
         //String serverHostname = "127.0.0.1";
+    	
+    	
     	
         if (args.length > 0)
             serverHostname = args[0];

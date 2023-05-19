@@ -5,7 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import client.cryptography.CaesarCipher;
+import client.logic.SocketLogic;
+import client.logic.User;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JPasswordField;
@@ -23,19 +32,6 @@ public class UserRegisterLayout extends JFrame {
 	private JButton btnBack;
 	private JLabel lblNewLabel_3;
 	private JButton btnRegisterUser;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UserRegisterLayout frame = new UserRegisterLayout();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public UserRegisterLayout() {
 		this.initComponents();
@@ -107,10 +103,44 @@ public class UserRegisterLayout extends JFrame {
 	}
 	
 	private void btnRegisterUserAction() {
+		System.out.println("Cliente: Operação de cadastro");
+    	
+		String name = txtFieldName.getText().toString();
+		String email = txtFieldEmail.getText().toString();
 		
+		String password = String.valueOf(txtFieldPassword.getPassword());
+		password = new CaesarCipher().encrypt(password);
+    	
+    	String userInput = new User().register(name, email, password);
+    	
+    	String inputLine = new SocketLogic().sendAndReceive(userInput);
+    	
+    	User user = new User();
+		user.registerResponse(inputLine);
+		
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Cadastrado com sucesso");
+	    		JOptionPane.showMessageDialog(this, "Cadastrado com sucesso", "Operação de Cadastro", JOptionPane.INFORMATION_MESSAGE);
+	    		new LoginLayout().setVisible(true);
+	    		this.dispose();
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    		JOptionPane.showMessageDialog(this, "Falha no cadastro", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);
+	    	}
+        }else {
+        	System.out.println("Cadastro: JsonObject ta null");
+        	JOptionPane.showMessageDialog(this, "JsonObject ta null", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);
+        }
 	}
 	
 	private void btnBackAction() {
-		
+		new LoginLayout().setVisible(true);
+		this.dispose();
 	}
 }
