@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Incident {
 	private int id_incident;
 	private int id_user;
-	private Date date;
+	private String date;
 	private String highway;
 	private int km;
 	private int incident_type;
@@ -22,10 +22,10 @@ public class Incident {
 	public void setId_user(int id_user) {
 		this.id_user = id_user;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getHighway() {

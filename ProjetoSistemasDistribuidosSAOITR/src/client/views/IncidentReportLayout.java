@@ -1,31 +1,42 @@
 package client.views;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import client.cryptography.CaesarCipher;
+import client.logic.Incident;
+import client.logic.SocketLogic;
 import client.logic.User;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class IncidentReportLayout extends JFrame {
 
 	private JPanel contentPane;
-	private JFormattedTextField txtFieldDate;
 	private JTextField txtFieldHighway;
 	private JTextField txtFieldKm;
 	
 	private User user;
+	private JComboBox<String> cbIncidentType;
 	
 	public IncidentReportLayout(User user) {
 		this.user = user;
@@ -34,7 +45,7 @@ public class IncidentReportLayout extends JFrame {
 	
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 394, 235);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -49,49 +60,39 @@ public class IncidentReportLayout extends JFrame {
 		});
 		btnBack.setBounds(10, 11, 47, 23);
 		contentPane.add(btnBack);
-		
-		JLabel lblNewLabel = new JLabel("Data:");
-		lblNewLabel.setBounds(10, 60, 46, 14);
-		contentPane.add(lblNewLabel);
-		
-		txtFieldDate = new JFormattedTextField();
-		txtFieldDate.setBounds(111, 57, 196, 20);
-		contentPane.add(txtFieldDate);
-		txtFieldDate.setColumns(10);
 		MaskFormatter maskData;
 		try {
 			maskData = new MaskFormatter("####/##/## ##:##:##");
-			maskData.install(txtFieldDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
 		JLabel lblRodovia = new JLabel("Rodovia:");
-		lblRodovia.setBounds(10, 88, 46, 14);
+		lblRodovia.setBounds(10, 48, 46, 14);
 		contentPane.add(lblRodovia);
 		
 		txtFieldHighway = new JTextField();
 		txtFieldHighway.setColumns(10);
-		txtFieldHighway.setBounds(111, 85, 196, 20);
+		txtFieldHighway.setBounds(111, 45, 196, 20);
 		contentPane.add(txtFieldHighway);
 		
 		JLabel lblKm = new JLabel("Km:");
-		lblKm.setBounds(10, 116, 46, 14);
+		lblKm.setBounds(10, 76, 46, 14);
 		contentPane.add(lblKm);
 		
 		txtFieldKm = new JTextField();
 		txtFieldKm.setColumns(10);
-		txtFieldKm.setBounds(111, 113, 196, 20);
+		txtFieldKm.setBounds(111, 73, 196, 20);
 		contentPane.add(txtFieldKm);
 		
 		JLabel lblTipoIncidente = new JLabel("Tipo Incidente:");
-		lblTipoIncidente.setBounds(10, 144, 92, 14);
+		lblTipoIncidente.setBounds(10, 104, 92, 14);
 		contentPane.add(lblTipoIncidente);
 		
-		JComboBox<String> cbIncidentType = new JComboBox<String>();
+		cbIncidentType = new JComboBox<String>();
 		cbIncidentType.setModel(new DefaultComboBoxModel<String>(new String[] {"1 - Vento", "2 - Chuva", "3 - Nevoeiro", "4 - Neve", "5 - Gelo na pista", "6 - Granizo", "7 - Trânsito parado", "8 - Filas de Trânsito", "9 - Trânsito Lento", "10 - Acidente Desconhecido", "11 - Incidente Desconhecido", "12 - Trabalhos na estrada", "13 - Bloqueio de pista", "14 - Bloqueio de estrada"}));
 		cbIncidentType.setSelectedIndex(0);
-		cbIncidentType.setBounds(111, 140, 196, 22);
+		cbIncidentType.setBounds(111, 100, 196, 22);
 		contentPane.add(cbIncidentType);
 		
 		JButton btnIncidentReport = new JButton("Reportar");
@@ -100,12 +101,44 @@ public class IncidentReportLayout extends JFrame {
 				btnIncidentReportAction();
 			}
 		});
-		btnIncidentReport.setBounds(10, 169, 89, 23);
+		btnIncidentReport.setBounds(176, 133, 89, 23);
 		contentPane.add(btnIncidentReport);
 	}
 	
 	private void btnIncidentReportAction() {
+		System.out.println("Cliente: Operação de reportar incidente");
 		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		String date = LocalDateTime.now().toString();  
+		String highway = txtFieldHighway.getText().toString();
+		int km = Integer.parseInt(txtFieldKm.getText().toString());
+		int incidentType = cbIncidentType.getSelectedIndex() + 1;
+		
+		String userInput = new Incident().reportIncident(user.getToken(), user.getId_usuario(), date, highway, km, incidentType);
+		String inputLine = new SocketLogic().sendAndReceive(userInput);
+		
+//		User user = new User();
+//		user.loginResponse(inputLine);
+		Incident incident = new Incident();
+		incident.reportIncidentResponse(inputLine);
+		
+        JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Incidente reportado com sucesso");
+	    		JOptionPane.showMessageDialog(this, "Incidente reportado com sucesso", "Operação de Reportar Incidentes", JOptionPane.INFORMATION_MESSAGE);
+	    		new HomeLayout(user).setVisible(true);
+    			this.dispose();
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    		JOptionPane.showMessageDialog(this, "Falha em reportar incidente", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
+	    	}
+        }else {
+        	System.out.println("Incidente reportado: JsonObject ta null");
+        	JOptionPane.showMessageDialog(this, "JsonObject ta null", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
+        }
 	}
 
 	private void btnBackAction() {

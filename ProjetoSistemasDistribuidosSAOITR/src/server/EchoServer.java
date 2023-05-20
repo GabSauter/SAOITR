@@ -7,6 +7,8 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
+import server.logic.IncidentLogic;
 import server.logic.UserLogic;
 
 import java.io.*;
@@ -109,6 +111,16 @@ public class EchoServer extends Thread {
 							UserLogic userLogic = new UserLogic(jsonObject);
 							try {
 								outputLine = userLogic.userLogin();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
+						}
+						case 4: {
+							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
+							try {
+								outputLine = incidentLogic.incidentReport();
 							} catch (SQLException | IOException e) {
 								System.out.println(e.getMessage());
 							}

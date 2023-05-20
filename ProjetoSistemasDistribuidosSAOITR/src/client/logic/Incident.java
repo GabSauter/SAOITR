@@ -1,7 +1,5 @@
 package client.logic;
 
-import java.sql.Date;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -9,14 +7,14 @@ public class Incident {
 	
 	private int id_incident;
 	private User user;
-	private Date date;
+	private String date;
 	private String highway;
 	private int km;
 	private int incident_type;
 	
-	public String reportIncident(int id_incident, String token, int id_user, Date date, String highway, int km, int incident_type) {
+	public String reportIncident(String token, int id_user, String date, String highway, int km, int incident_type) {
 		JsonObject json = new JsonObject();
-		
+		this.user = new User();
 		this.user.setId_usuario(id_user);
 		this.user.setToken(token);
 		this.date = date;
@@ -26,8 +24,8 @@ public class Incident {
 		
 		json.addProperty("id_operacao", 4);
 		json.addProperty("id_usuario", this.user.getId_usuario());
-		json.addProperty("id_usuario", this.user.getToken());
-		json.addProperty("date", this.date.toString());
+		json.addProperty("token", this.user.getToken());
+		json.addProperty("data", this.date.toString());
 		json.addProperty("rodovia", this.highway);
 		json.addProperty("km", this.km);
 		json.addProperty("tipo_incidente", this.incident_type);
@@ -59,10 +57,10 @@ public class Incident {
 		this.id_incident = id_incident;
 	}
 	
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getHighway() {

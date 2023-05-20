@@ -21,7 +21,7 @@ public class IncidentDAO {
 			st = conn.prepareStatement("insert into incident (id_user, date, highway, km, incident_type) values(?,?,?,?,?)");
 			
 			st.setInt(1, incident.getId_user());
-			st.setDate(2, incident.getDate());
+			st.setString(2, incident.getDate());
 			st.setString(3, incident.getHighway());
 			st.setInt(4, incident.getKm());
 			st.setInt(5, incident.getIncident_type());

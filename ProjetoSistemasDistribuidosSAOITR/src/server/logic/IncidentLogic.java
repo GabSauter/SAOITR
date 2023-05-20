@@ -25,7 +25,7 @@ public class IncidentLogic {
 		try {
 			//if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
 				incident.setId_user(json.get("id_usuario").getAsInt());
-				//incident.setDate(json.get("email").getAsString());
+				incident.setDate(json.get("data").getAsString());
 				incident.setHighway(json.get("rodovia").getAsString());
 				incident.setKm(json.get("km").getAsInt());
 				incident.setIncident_type(json.get("tipo_incidente").getAsInt());
@@ -40,7 +40,8 @@ public class IncidentLogic {
 			//}
 		}catch(Exception e) {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			return createResultJson(11, false);			
+			e.printStackTrace();
+			return createResultJson(4, false);			
 		}
 		//System.out.println("Erro 3 - Erro com null");
 		//return createResultJson(1, false);	
