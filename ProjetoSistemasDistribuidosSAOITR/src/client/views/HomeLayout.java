@@ -52,6 +52,15 @@ public class HomeLayout extends JFrame {
 		});
 		btnLogout.setBounds(206, 277, 89, 23);
 		contentPane.add(btnLogout);
+		
+		JButton btnUpdateRegister = new JButton("Atualizar cadastro");
+		btnUpdateRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUpdateRegisterAction();
+			}
+		});
+		btnUpdateRegister.setBounds(305, 7, 167, 23);
+		contentPane.add(btnUpdateRegister);
 	}
 	
 	private void btnLogoutAction() {
@@ -81,5 +90,9 @@ public class HomeLayout extends JFrame {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
         }
 	}
-
+	
+	private void btnUpdateRegisterAction() {
+		new UpdateUserRegisterLayout(user).setVisible(true);
+		this.dispose();
+	}
 }

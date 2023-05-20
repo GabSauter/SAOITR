@@ -36,7 +36,7 @@ public class UserValidation {
 		   !user.getEmail().contains("@") ||
 		   user.getName().matches("[0-9]+")||
 		   new UserService().emailAlreadyExists(user.getEmail()) || // Precisa ver aqui caso o usuario deseja manter o mesmo email
-		   !new UserService().isLoggedIn(user.getIdUsuario(), user.getToken()))
+		   !new UserService().isLoggedIn(user.getIdUsuario()))
 			return false;
 		
 		return true;

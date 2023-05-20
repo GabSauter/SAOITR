@@ -10,5 +10,4 @@ public class AppClient {
     	connectionLayout.setVisible(true);
     	
 	}
-
 }

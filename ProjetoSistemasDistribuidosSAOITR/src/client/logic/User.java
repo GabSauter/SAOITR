@@ -78,6 +78,43 @@ public class User {
         }
 	}
 	
+	public String updateRegister(String name, String email, String password, int id, String token) {
+		JsonObject json = new JsonObject();
+		
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.id_usuario = id;
+		this.token = token;
+		
+		json.addProperty("id_operacao", 2);
+		json.addProperty("nome", this.name);
+		json.addProperty("email", this.email);
+		json.addProperty("senha", this.password);
+		json.addProperty("token", this.token);
+		json.addProperty("id_usuario", this.id_usuario);
+		
+		return json.toString();
+	}
+	
+	public void updateRegisterResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		this.setToken(jsonObject.get("token").getAsString());
+	    		System.out.println(jsonObject.get("token").getAsString());
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Cadastro: JsonObject ta null");
+        }
+	}
+	
 	public String logout() {
 		JsonObject json = new JsonObject();
 		

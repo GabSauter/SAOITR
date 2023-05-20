@@ -119,19 +119,21 @@ public class UserDAO {
 		return false;
 	}
 
-	public boolean isLoggedIn(int idUsuario, String token) throws SQLException {
+	public boolean isLoggedIn(int idUsuario) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select * from user where id = ? and token = ?");
+			st = conn.prepareStatement("select * from user where id = ?");
 			st.setInt(1, idUsuario);
-			st.setString(2, token);
 			
 			rs = st.executeQuery();
 			if(rs.next()) {
-				System.out.println("Esta logado");
-				return true;
+				String token = rs.getString("token");
+				if(!token.equals("")) {
+					System.out.println("Esta logado");
+					return true;
+				}
 			}
 			
 		} finally {
@@ -143,20 +145,19 @@ public class UserDAO {
 		return false;
 	}
 
-	public void updateRegister(User user) throws SQLException {
+	public User updateRegister(User user) throws SQLException {
 		PreparedStatement st = null;
 		PreparedStatement st2 = null;
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("update user set name = ?, email = ?, password = ?, token = ? where id = ? and token = ?");
+			st = conn.prepareStatement("update user set name = ?, email = ?, password = ?, token = ? where id = ?");
 			
 			st.setString(1, user.getName());
 			st.setString(2, user.getEmail());
 			st.setString(3, user.getPassword());
 			st.setString(4, UUID.randomUUID().toString().replaceAll("-", ""));
 			st.setInt(5, user.getIdUsuario());
-			st.setString(6, user.getToken());
 			
 			st.executeUpdate();
 			
@@ -167,12 +168,13 @@ public class UserDAO {
 			rs = st2.executeQuery();
 			
 			if(rs.next()) {
-				
-				user.setIdUsuario(rs.getInt("id"));
-				user.setName(rs.getString("name"));
-				user.setEmail(rs.getString("email"));
-				user.setPassword(rs.getString("password"));
-				user.setToken(rs.getString("token"));
+				User updatedUser = new User();
+				updatedUser.setIdUsuario(rs.getInt("id"));
+				updatedUser.setName(rs.getString("name"));
+				updatedUser.setEmail(rs.getString("email"));
+				updatedUser.setPassword(rs.getString("password"));
+				updatedUser.setToken(rs.getString("token"));
+				return updatedUser;
 			}
 			
 		} finally {
@@ -181,5 +183,7 @@ public class UserDAO {
 			Database.finalizarResultSet(rs);
 			Database.disconnect();
 		}
+		
+		return null;
 	}
 }

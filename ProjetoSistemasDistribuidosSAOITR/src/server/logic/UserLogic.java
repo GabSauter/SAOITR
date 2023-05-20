@@ -79,7 +79,6 @@ public class UserLogic {
 	}
 	
 	public String userLogout() throws SQLException, IOException {
-		this.user = new User();
 		
 		try {
 			if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null) {
@@ -121,7 +120,8 @@ public class UserLogic {
 				user.setIdUsuario(json.get("id_usuario").getAsInt());
 				
 				if(userValidation.updateRegisterValidation(this.user)) {
-		        	new UserService().updateRegister(user);
+					this.user = new UserService().updateRegister(user);
+					System.out.println(this.user);
 		        	return createResultJson(2, true);
 				}else {
 					System.out.println("Erro 1 - Erro de validação ou usuário não está logado.");
@@ -130,6 +130,7 @@ public class UserLogic {
 			}
 		}catch(Exception e) {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
+			e.printStackTrace();
 			return createResultJson(11, false);			
 		}
 		System.out.println("Erro 3 - Erro com null");
