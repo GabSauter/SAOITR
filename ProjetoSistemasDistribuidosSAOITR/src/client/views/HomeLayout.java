@@ -61,6 +61,15 @@ public class HomeLayout extends JFrame {
 		});
 		btnUpdateRegister.setBounds(305, 7, 167, 23);
 		contentPane.add(btnUpdateRegister);
+		
+		JButton btnIncidentReport = new JButton("Reportar Incidente");
+		btnIncidentReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnIncidentReportAction();
+			}
+		});
+		btnIncidentReport.setBounds(10, 38, 137, 23);
+		contentPane.add(btnIncidentReport);
 	}
 	
 	private void btnLogoutAction() {
@@ -93,6 +102,11 @@ public class HomeLayout extends JFrame {
 	
 	private void btnUpdateRegisterAction() {
 		new UpdateUserRegisterLayout(user).setVisible(true);
+		this.dispose();
+	}
+	
+	private void btnIncidentReportAction() {
+		new IncidentReportLayout(user).setVisible(true);
 		this.dispose();
 	}
 }
