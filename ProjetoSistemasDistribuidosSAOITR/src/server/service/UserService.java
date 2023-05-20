@@ -29,4 +29,14 @@ public class UserService {
 		Connection conn = Database.connect();
 		return new UserDAO(conn).emailAlreadyExists(email);
 	}
+
+	public boolean isLoggedIn(int idUsuario, String token) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		return new UserDAO(conn).isLoggedIn(idUsuario, token);
+	}
+
+	public void updateRegister(User user) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		new UserDAO(conn).updateRegister(user);
+	}
 }

@@ -109,6 +109,33 @@ public class UserLogic {
 		}
 	}
 	
+	public String userUpdateRegister() throws SQLException, IOException{
+		this.user = new User();
+		
+		try {
+			if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null && json.get("token") != null && json.get("id_usuario") != null) {
+				user.setName(json.get("nome").getAsString());
+				user.setEmail(json.get("email").getAsString());
+				user.setPassword(json.get("senha").getAsString());
+				user.setToken(json.get("token").getAsString());
+				user.setIdUsuario(json.get("id_usuario").getAsInt());
+				
+				if(userValidation.updateRegisterValidation(this.user)) {
+		        	new UserService().updateRegister(user);
+		        	return createResultJson(2, true);
+				}else {
+					System.out.println("Erro 1 - Erro de validação ou usuário não está logado.");
+					return createResultJson(2, false);
+				}
+			}
+		}catch(Exception e) {
+			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
+			return createResultJson(11, false);			
+		}
+		System.out.println("Erro 3 - Erro com null");
+		return createResultJson(2, false);
+	}
+	
 	private String createResultJson(int idOperacao, boolean correct) {
 		
 		JsonObject json = new JsonObject();
@@ -128,6 +155,17 @@ public class UserLogic {
 				json.addProperty("codigo", 500);
 				json.addProperty("mensagem", "Houve um erro de exceção, talvez o banco de dados não está rodando.");
 				
+				return json.toString();
+			}
+			case 2:{
+				System.out.println("Operação de atualizar cadastro");
+				if(correct) {
+					json.addProperty("codigo", 200);
+					json.addProperty("token", this.user.getToken());
+				}else {
+					json.addProperty("codigo", 500);
+					json.addProperty("mensagem", "Erro ao atualizar cadastro.");
+				}
 				return json.toString();
 			}
 			case 3: {

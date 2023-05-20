@@ -93,6 +93,17 @@ public class EchoServer extends Thread {
 	
 							break;
 						}
+						case 2: {
+							
+							UserLogic userLogic = new UserLogic(jsonObject);
+							try {
+								outputLine = userLogic.userUpdateRegister();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+							
+							break;
+						}
 						case 3: { // Login
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
