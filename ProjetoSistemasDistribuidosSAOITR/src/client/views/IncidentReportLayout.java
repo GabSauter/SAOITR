@@ -108,8 +108,10 @@ public class IncidentReportLayout extends JFrame {
 	private void btnIncidentReportAction() {
 		System.out.println("Cliente: Operação de reportar incidente");
 		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-		String date = LocalDateTime.now().toString();  
+		final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime ldt = LocalDateTime.now();
+		String date = ldt.format(CUSTOM_FORMATTER);
+		
 		String highway = txtFieldHighway.getText().toString();
 		int km = Integer.parseInt(txtFieldKm.getText().toString());
 		int incidentType = cbIncidentType.getSelectedIndex() + 1;
@@ -117,8 +119,6 @@ public class IncidentReportLayout extends JFrame {
 		String userInput = new Incident().reportIncident(user.getToken(), user.getId_usuario(), date, highway, km, incidentType);
 		String inputLine = new SocketLogic().sendAndReceive(userInput);
 		
-//		User user = new User();
-//		user.loginResponse(inputLine);
 		Incident incident = new Incident();
 		incident.reportIncidentResponse(inputLine);
 		

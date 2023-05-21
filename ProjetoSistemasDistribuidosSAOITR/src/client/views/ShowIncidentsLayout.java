@@ -1,7 +1,5 @@
 package client.views;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -38,6 +36,10 @@ public class ShowIncidentsLayout extends JFrame {
 	private User user;
 
 	public ShowIncidentsLayout() {
+		initComponents();
+	}
+	
+	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 629, 489);
 		contentPane = new JPanel();
