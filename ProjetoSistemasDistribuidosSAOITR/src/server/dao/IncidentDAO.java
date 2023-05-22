@@ -37,16 +37,35 @@ public class IncidentDAO {
 		}
 	}
 	
-	public JsonArray searchIncidents(String highway, String date, String initialLane, String finalLane, int incident_type) throws SQLException { //String date no formato YYYY-MM-DD HH:MM:SS 
+	public JsonArray searchIncidents(String highway, String date, String initialLane, String finalLane, int period) throws SQLException { //String date no formato YYYY-MM-DD HH:MM:SS 
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
-			 String query = "SELECT * FROM incident WHERE highway = ? AND DATE(date) = ? AND incident_type = ?";
+			
+			String periodCondition;
+            switch (period) {
+                case 1: // Morning
+                    periodCondition = " HOUR(date) BETWEEN 6 AND 11 ";
+                    break;
+                case 2: // Afternoon
+                    periodCondition = " HOUR(date) BETWEEN 12 AND 17 ";
+                    break;
+                case 3: // Nights
+                    periodCondition = " HOUR(date) BETWEEN 18 AND 23 ";
+                    break;
+                case 4: // Dawn
+                    periodCondition = " HOUR(date) BETWEEN 0 AND 5 ";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid period value: " + period);
+            }
+            
+			String query = "SELECT * FROM incident WHERE highway = ? AND DATE(date) = ? AND" + periodCondition;
 
             if (initialLane != null && finalLane != null) {
-                query += " AND lane BETWEEN ? AND ?";
+                query += " AND km BETWEEN ? AND ?";
             }
             
             query += " ORDER BY date";
@@ -55,11 +74,11 @@ public class IncidentDAO {
             
             st.setString(1, highway);
             st.setString(2, date);
-            st.setInt(3, incident_type);
+            //st.setInt(3, period);
 
             if (initialLane != null && finalLane != null) {
-                st.setString(4, initialLane);
-                st.setString(5, finalLane);
+                st.setString(3, initialLane);
+                st.setString(4, finalLane);
             }
 
             rs = st.executeQuery();
@@ -71,8 +90,8 @@ public class IncidentDAO {
 				
 				incident.addProperty("data", rs.getString("date"));
 				incident.addProperty("rodovia", rs.getString("highway"));
-				incident.addProperty("id_incident", rs.getInt("id_incident"));
-				incident.addProperty("Incident_type", rs.getInt("Incident_type"));
+				incident.addProperty("id_incidente", rs.getInt("id_incident"));
+				incident.addProperty("tipo_incidente", rs.getInt("incident_type"));
 				incident.addProperty("km", rs.getInt("km"));
 				
 				incidents.add(incident);

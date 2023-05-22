@@ -1,6 +1,7 @@
 package client.logic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class Incident {
@@ -11,6 +12,8 @@ public class Incident {
 	private String highway;
 	private int km;
 	private int incident_type;
+	
+	private JsonArray incidentsList;
 	
 	public String reportIncident(String token, int id_user, String date, String highway, int km, int incident_type) {
 		JsonObject json = new JsonObject();
@@ -47,6 +50,44 @@ public class Incident {
 	    	}
         }else {
         	System.out.println("Incidente reportado: JsonObject ta null");
+        }
+	}
+	
+	public JsonArray getIncidentsList() {
+		return incidentsList;
+	}
+
+	public void setIncidentsList(JsonArray incidentsList) {
+		this.incidentsList = incidentsList;
+	}
+
+	public String searchIncidents(String highway, String date, String lanes, int period) { // lanes (faixa de km): 123-456
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id_operacao", 5);
+		json.addProperty("rodovia", highway);
+		json.addProperty("data", date);
+		json.addProperty("faixa_km", lanes);
+		json.addProperty("periodo", period);
+		
+		return json.toString();
+	}
+	
+	public void searchIncidentsResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Procurar incidentes reportado com sucesso");
+	    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Procurar incidente reportado: JsonObject ta null");
         }
 	}
 	

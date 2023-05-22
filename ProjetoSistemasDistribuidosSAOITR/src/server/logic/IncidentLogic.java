@@ -3,86 +3,87 @@ package server.logic;
 import java.io.IOException;
 import java.sql.SQLException;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import server.entities.Incident;
+import server.logic.validation.IncidentValidation;
 import server.service.IncidentService;
 
 public class IncidentLogic {
 	
 	private Incident incident;
 	private JsonObject json;
-	//private IncidentValidation incidentValidation;
+	private IncidentValidation incidentValidation;
 	
 	private JsonArray incidentList;
 	
 	public IncidentLogic(JsonObject json) {
 		this.json = json;
-		//this.incidentValidation = new IncidentValidation();
+		this.incidentValidation = new IncidentValidation();
 	}
 	
 	public String incidentReport() throws SQLException, IOException {
 		this.incident = new Incident();
 		
 		try {
-			//if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
+			if(json.get("id_usuario") != null && json.get("data") != null && json.get("rodovia") != null && json.get("km") != null && json.get("tipo_incidente") != null) {
 				incident.setId_user(json.get("id_usuario").getAsInt());
 				incident.setDate(json.get("data").getAsString());
 				incident.setHighway(json.get("rodovia").getAsString());
 				incident.setKm(json.get("km").getAsInt());
 				incident.setIncident_type(json.get("tipo_incidente").getAsInt());
 				
-				//if(incidentValidation.registerValidation(this.user)) {
+				if(incidentValidation.validateReportIncident(this.incident)) {
 		        	new IncidentService().incidentReport(incident);
 		        	return createResultJson(4, true);
-				//}else {
-				//	System.out.println("Erro 1 - Erro de validação");
-				//	return createResultJson(1, false);
-				//}
-			//}
+				}else {
+					System.out.println("Erro 1 - Erro de validação do incidente");
+					return createResultJson(4, false);
+				}
+			}
 		}catch(Exception e) {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
 			e.printStackTrace();
 			return createResultJson(4, false);			
 		}
-		//System.out.println("Erro 3 - Erro com null");
-		//return createResultJson(1, false);	
+		System.out.println("Erro 3 - Erro com null");
+		return createResultJson(4, false);	
 	}
 	
 	public String searchIncidents() throws SQLException, IOException {
 		this.incident = new Incident();
-		//String highway, String date, String initialLane, String finalLane
 		try {
-			//if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
+			if(json.get("data") != null && json.get("rodovia") != null && json.get("periodo") != null) {
 				
 				incident.setDate(json.get("data").getAsString());
 				incident.setHighway(json.get("rodovia").getAsString());
-				incident.setIncident_type(json.get("tipo_incident").getAsInt());
+				int period = json.get("periodo").getAsInt();
 				
 				String initialLane = null;
 				String finalLane = null;
 				
-				if(json.get("faixa_km") != null) {
+				if(json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) {// Não quer funcionar
 					String[] lanes = json.get("faixa_km").getAsString().split("-");
 					initialLane = lanes[0];
 					finalLane = lanes[1];
 				}
-				
-				//if(incidentValidation.registerValidation(this.user)) {
-					incidentList = new IncidentService().searchIncidents(incident.getHighway(), incident.getDate(), initialLane, finalLane, incident.getIncident_type());
+				String lanesRange = (json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) ? json.get("faixa_km").toString() : null;
+				if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
+					incidentList = new IncidentService().searchIncidents(incident.getHighway(), incident.getDate(), initialLane, finalLane, period);
 		        	return createResultJson(5, true);
-				//}else {
-				//	System.out.println("Erro 1 - Erro de validação");
-				//	return createResultJson(1, false);
-				//}
-			//}
+				}else {
+					System.out.println("Erro 1 - Erro de validação");
+					return createResultJson(5, false);
+				}
+			}
 		}catch(Exception e) {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
 			e.printStackTrace();
 			return createResultJson(5, false);			
 		}
-		//System.out.println("Erro 3 - Erro com null");
-		//return createResultJson(1, false);	
+		System.out.println("Erro 3 - Erro com null");
+		return createResultJson(5, false);	
 	}
 	
 	private String createResultJson(int idOperacao, boolean correct) {
