@@ -122,7 +122,7 @@ public class Incident {
 		return json.toString();
 	}
 	
-	public void deleteIncidenttResponse(String inputLine) {
+	public void deleteIncidentResponse(String inputLine) {
 		Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
         int codigo = 0;

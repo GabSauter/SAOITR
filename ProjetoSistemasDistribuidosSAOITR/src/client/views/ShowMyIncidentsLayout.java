@@ -178,13 +178,14 @@ public class ShowMyIncidentsLayout extends JFrame {
     		String inputLine = new SocketLogic().sendAndReceive(userInput);
     		
     		Incident incident = new Incident();
-    		incident.searchIncidentsResponse(inputLine);
+    		incident.deleteIncidentResponse(inputLine);
     		
             JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
             if(jsonObject != null) {
             	int codigo = jsonObject.get("codigo").getAsInt();
             	if(codigo == 200) {
             		JOptionPane.showMessageDialog(this, "Deletar Incidente", "Incidente deletado com sucesso", JOptionPane.INFORMATION_MESSAGE);
+            		model.removeRow(row);
             	}else {
             		JOptionPane.showMessageDialog(this, "Deletar Incidente", "Erro ao tentar deletar Incidente", JOptionPane.ERROR_MESSAGE);
             	}

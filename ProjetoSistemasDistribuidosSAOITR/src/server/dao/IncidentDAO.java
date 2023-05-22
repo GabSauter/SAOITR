@@ -74,7 +74,6 @@ public class IncidentDAO {
             
             st.setString(1, highway);
             st.setString(2, date);
-            //st.setInt(3, period);
 
             if (initialLane != null && finalLane != null) {
                 st.setString(3, initialLane);
@@ -137,6 +136,29 @@ public class IncidentDAO {
 		} finally {
 			Database.endStatement(st);
 			Database.finalizarResultSet(rs);
+			Database.disconnect();
+		}
+	}
+	
+	public boolean deleteIncident(String token, int user_id, int incident_id) throws SQLException { // Falta verificar o token
+		
+		PreparedStatement st = null;
+		
+		try {
+            st = conn.prepareStatement("delete from incident where id_user = ? and id_incident = ?");
+            st.setInt(1, user_id);
+            st.setInt(2, incident_id);
+
+            int manipulatedLines = st.executeUpdate();
+
+			if(manipulatedLines == 1) {
+				System.out.println("Incidente deletado com sucesso.");
+				return true;
+			}
+			System.out.println("Incidente não encontrado");
+			return false;
+		} finally {
+			Database.endStatement(st);
 			Database.disconnect();
 		}
 	}

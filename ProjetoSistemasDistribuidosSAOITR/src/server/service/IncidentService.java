@@ -28,4 +28,9 @@ public class IncidentService {
 		Connection conn = Database.connect();
 		return new IncidentDAO(conn).searchMyIncidents(token, user_id);
 	}
+	
+	public boolean deleteIncident(String token, int user_id, int incident_id) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		return new IncidentDAO(conn).deleteIncident(token, user_id, incident_id);
+	}
 }

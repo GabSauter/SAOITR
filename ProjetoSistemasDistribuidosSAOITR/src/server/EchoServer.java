@@ -147,6 +147,16 @@ public class EchoServer extends Thread {
 	
 							break;
 						}
+						case 7: {
+							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
+							try {
+								outputLine = incidentLogic.deleteIncident();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
+						}
 						case 9: { // logout
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
