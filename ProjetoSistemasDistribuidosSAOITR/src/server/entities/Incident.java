@@ -1,7 +1,5 @@
 package server.entities;
 
-import java.sql.Date;
-
 public class Incident {
 	private int id_incident;
 	private int id_user;

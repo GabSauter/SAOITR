@@ -23,7 +23,7 @@ public class SocketLogic {
         try {
         	this.echoSocket = new Socket(serverHostname, port);
         	SocketLogic.out = new PrintWriter(echoSocket.getOutputStream(), true);
-            this.in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+            SocketLogic.in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             return true;
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverHostname);

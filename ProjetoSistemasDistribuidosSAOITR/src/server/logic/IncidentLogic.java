@@ -3,7 +3,6 @@ package server.logic;
 import java.io.IOException;
 import java.sql.SQLException;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import server.entities.Incident;
