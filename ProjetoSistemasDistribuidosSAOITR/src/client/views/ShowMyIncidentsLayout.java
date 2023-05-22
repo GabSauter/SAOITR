@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ShowMyIncidentsLayout extends JFrame {
 
@@ -59,12 +61,18 @@ public class ShowMyIncidentsLayout extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				tableMouseClickedAction();
+			}
+		});
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
-					"Data", "Rodovia", "Km", "Tipo do incidente"
+					"ID", "Data", "Rodovia", "Km", "Tipo do incidente"
 				}
 		));
 		
@@ -122,6 +130,7 @@ public class ShowMyIncidentsLayout extends JFrame {
         		
         		for(Incident incident2: incidents) {
         			model.addRow(new Object[] {
+        					incident2.getId_incident(),
         					incident2.getDate(),
         					incident2.getHighway(),
         					incident2.getKm(),
@@ -134,6 +143,54 @@ public class ShowMyIncidentsLayout extends JFrame {
         	}
         }else {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de mostrar meus incidentes", JOptionPane.ERROR_MESSAGE);
+        }
+	}
+	
+	private void tableMouseClickedAction() {
+		int row = table.getSelectedRow();
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
+		int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+		String date = model.getValueAt(row, 1).toString();
+		String higway = model.getValueAt(row, 2).toString();
+		int km = Integer.parseInt(model.getValueAt(row, 3).toString());
+		int incidentType = getIncidentTypeFromString(model.getValueAt(row, 4).toString());
+		
+        String[] options = { "Editar", "Excluir" };
+
+        // Show the JOptionPane with two buttons
+        int result = JOptionPane.showOptionDialog(null,
+                "Escolha uma opção:",
+                "Editar ou excluir?",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        if (result == 0) {
+            System.out.println("Botão editar foi clicado");
+        } else if (result == 1) {
+            System.out.println("Botão excluir foi clicado");
+            System.out.println("Cliente: Operação de deletar incidente do usuário");
+            
+            String userInput = new Incident().deleteIncident(user.getToken(), user.getId_usuario(), id);
+    		String inputLine = new SocketLogic().sendAndReceive(userInput);
+    		
+    		Incident incident = new Incident();
+    		incident.searchIncidentsResponse(inputLine);
+    		
+            JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
+            if(jsonObject != null) {
+            	int codigo = jsonObject.get("codigo").getAsInt();
+            	if(codigo == 200) {
+            		JOptionPane.showMessageDialog(this, "Deletar Incidente", "Incidente deletado com sucesso", JOptionPane.INFORMATION_MESSAGE);
+            	}else {
+            		JOptionPane.showMessageDialog(this, "Deletar Incidente", "Erro ao tentar deletar Incidente", JOptionPane.ERROR_MESSAGE);
+            	}
+            }else {
+            	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de mostrar meus incidentes", JOptionPane.ERROR_MESSAGE);
+            }
         }
 	}
 	
@@ -183,5 +240,55 @@ public class ShowMyIncidentsLayout extends JFrame {
 			}
 		}
 		return "Erro";
+	}
+	
+	private int getIncidentTypeFromString(String incidentTypeString) {
+		switch(incidentTypeString) {
+			case "Vento": {
+				return 1;
+			}
+			case "Chuva": {
+				return 2;
+			}
+			case "Nevoeiro": {
+				return 3;
+			}
+			case "Neve": {
+				return 4;
+			}
+			case "Gelo na pista": {
+				return 5;
+			}
+			case "Granizo": {
+				return 6;
+			}
+			case "Trânsito parado": {
+				return 7;
+			}
+			case "Filas de trânsito": {
+				return 8;
+			}
+			case "Trânsito lento": {
+				return 9;
+			}
+			case "Acidente desconhecido": {
+				return 10;
+			}
+			case "Incidente desconhecido": {
+				return 11;
+			}
+			case "Trabalhos na estrada": {
+				return 12;
+			}
+			case "Bloqueio de pista": {
+				return 13;
+			}
+			case "Bloqueio de estrada": {
+				return 14;
+			}
+			default: {
+				return -1; // Return -1 for unknown incident types
+			}
+		}
 	}
 }

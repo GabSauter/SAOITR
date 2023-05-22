@@ -111,6 +111,34 @@ public class Incident {
         }
 	}
 	
+	public String deleteIncident(String token, int user_id, int incident_id) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id_operacao", 7);
+		json.addProperty("token", token);
+		json.addProperty("id_usuario", user_id);
+		json.addProperty("id_incidente", incident_id);
+		
+		return json.toString();
+	}
+	
+	public void deleteIncidenttResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Deletar incidente do usuário: sucesso");
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Deletar incidente do usuário: JsonObject ta null");
+        }
+	}
+	
 	public int getId_incident() {
 		return id_incident;
 	}

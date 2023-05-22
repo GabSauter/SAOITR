@@ -23,4 +23,9 @@ public class IncidentService {
 		Connection conn = Database.connect();
 		return new IncidentDAO(conn).searchIncidents(highway, date, initialLane, finalLane, period);
 	}
+	
+	public JsonArray searchMyIncidents(String token, int user_id) throws SQLException, IOException {
+		Connection conn = Database.connect();
+		return new IncidentDAO(conn).searchMyIncidents(token, user_id);
+	}
 }

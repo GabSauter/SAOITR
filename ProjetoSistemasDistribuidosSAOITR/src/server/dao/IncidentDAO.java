@@ -106,4 +106,39 @@ public class IncidentDAO {
 		}
 	}
 	
+	public JsonArray searchMyIncidents(String token, int user_id) throws SQLException { // Falta verificar o token
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+            st = conn.prepareStatement("SELECT * FROM incident WHERE id_user = ?");
+            
+            st.setInt(1, user_id);
+
+            rs = st.executeQuery();
+
+            JsonArray incidents = new JsonArray();
+			
+			while(rs.next()) {
+				JsonObject incident = new JsonObject();
+				
+				incident.addProperty("data", rs.getString("date"));
+				incident.addProperty("rodovia", rs.getString("highway"));
+				incident.addProperty("id_incidente", rs.getInt("id_incident"));
+				incident.addProperty("tipo_incidente", rs.getInt("incident_type"));
+				incident.addProperty("km", rs.getInt("km"));
+				
+				incidents.add(incident);
+			}
+			
+			return incidents;
+			
+		} finally {
+			Database.endStatement(st);
+			Database.finalizarResultSet(rs);
+			Database.disconnect();
+		}
+	}
+	
 }
