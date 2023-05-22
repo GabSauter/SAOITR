@@ -79,6 +79,15 @@ public class HomeLayout extends JFrame {
 		});
 		btnSearchIncidents.setBounds(10, 72, 137, 23);
 		contentPane.add(btnSearchIncidents);
+		
+		JButton btnShowMyIncidents = new JButton("Mostrar Meus Incidentes");
+		btnShowMyIncidents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnShowMyIncidentsAction();
+			}
+		});
+		btnShowMyIncidents.setBounds(10, 106, 137, 23);
+		contentPane.add(btnShowMyIncidents);
 	}
 	
 	private void btnLogoutAction() {
@@ -121,6 +130,11 @@ public class HomeLayout extends JFrame {
 	
 	private void btnSearchIncidentsAction() {
 		new ShowIncidentsLayout(user).setVisible(true);
+		this.dispose();
+	}
+	
+	private void btnShowMyIncidentsAction() {
+		new ShowMyIncidentsLayout(user).setVisible(true);
 		this.dispose();
 	}
 }

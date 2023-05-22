@@ -52,14 +52,6 @@ public class Incident {
         	System.out.println("Incidente reportado: JsonObject ta null");
         }
 	}
-	
-	public JsonArray getIncidentsList() {
-		return incidentsList;
-	}
-
-	public void setIncidentsList(JsonArray incidentsList) {
-		this.incidentsList = incidentsList;
-	}
 
 	public String searchIncidents(String highway, String date, String lanes, int period) { // lanes (faixa de km): 123-456
 		JsonObject json = new JsonObject();
@@ -88,6 +80,34 @@ public class Incident {
 	    	}
         }else {
         	System.out.println("Procurar incidente reportado: JsonObject ta null");
+        }
+	}
+	
+	public String requestMyIncidentsList(String token, int user_id) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id_operacao", 6);
+		json.addProperty("token", token);
+		json.addProperty("id_usuario", user_id);
+		
+		return json.toString();
+	}
+	
+	public void requestMyIncidentsListResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Solicitar incidentes reportado pelo usuário: sucesso");
+	    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Solicitar incidentes reportado pelo usuário: JsonObject ta null");
         }
 	}
 	
@@ -123,5 +143,11 @@ public class Incident {
 		this.incident_type = incident_type;
 	}
 	
-	
+	public JsonArray getIncidentsList() {
+		return incidentsList;
+	}
+
+	public void setIncidentsList(JsonArray incidentsList) {
+		this.incidentsList = incidentsList;
+	}
 }
