@@ -123,6 +123,27 @@ public class IncidentLogic {
 		return createResultJson(7, false);
 	}
 	
+	public String editIncident() throws SQLException, IOException {
+		this.incident = new Incident();
+		try {
+			if(json.get("id_usuario") != null && json.get("token") != null && json.get("id_incidente") != null && json.get("data") != null && json.get("km") != null&& json.get("rodovia") != null&& json.get("tipo_incidente") != null) {
+				
+				boolean hasItemEdited = new IncidentService().editIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(), json.get("data").getAsString(), json.get("rodovia").getAsString(), json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
+				if(hasItemEdited)
+					System.out.println("Incidente editado com sucesso.");
+				else
+					System.out.println("Incidente não encontrado.");
+		        return createResultJson(10, true);
+			}
+		}catch(Exception e) {
+			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
+			e.printStackTrace();
+			return createResultJson(10, false);			
+		}
+		System.out.println("Erro 3 - Erro com null");
+		return createResultJson(10, false);
+	}
+	
 	private String createResultJson(int idOperacao, boolean correct) {
 		
 		JsonObject json = new JsonObject();
@@ -167,6 +188,16 @@ public class IncidentLogic {
 				}else {
 					json.addProperty("codigo", 500);
 					json.addProperty("mensagem", "Houve um erro ao tentar deletar incidente.");
+				}
+				return json.toString();
+			}
+			case 10: {
+				System.out.println("Operação de editar incidente");
+				if(correct) {
+					json.addProperty("codigo", 200);
+				}else {
+					json.addProperty("codigo", 500);
+					json.addProperty("mensagem", "Houve um erro ao tentar editar incidente.");
 				}
 				return json.toString();
 			}

@@ -137,6 +137,35 @@ public class UserLogic {
 		return createResultJson(2, false);
 	}
 	
+	public String deleteUserAccount() throws SQLException, IOException {
+		try {
+			if(json.get("token") != null && json.get("id_usuario") != null && json.get("email") != null && json.get("senha") != null) {
+				String token = json.get("token").getAsString();
+				int id_usuario = json.get("id_usuario").getAsInt();
+				String email = json.get("email").getAsString();
+				String password = json.get("senha").getAsString();
+				
+				this.user = new User();
+				user.setToken(token);
+				user.setIdUsuario(id_usuario);
+				user.setEmail(email);
+				user.setPassword(password);
+				
+				if(token.equals("")) // Quer dizer que não esta logado
+					return createResultJson(10, false);
+				new UserService().deleteUserAccount(token, id_usuario, email, password);	
+				return createResultJson(8, true);
+			}else {
+				System.out.println("Erro de que envolve null");
+				return createResultJson(8, false);
+			}
+		}catch(Exception e) {
+			System.out.println("json null ou banco de dados não está rodando");
+			e.printStackTrace();
+			return createResultJson(8, false);			
+		}
+	}
+	
 	private String createResultJson(int idOperacao, boolean correct) {
 		
 		JsonObject json = new JsonObject();
@@ -178,6 +207,16 @@ public class UserLogic {
 				}else {
 					json.addProperty("codigo", 500);
 					json.addProperty("mensagem", "Email ou senha incorreto.");
+				}
+				return json.toString();
+			}
+			case 8: {
+				System.out.println("Operação de deletar conta");
+				if(correct) {
+					json.addProperty("codigo", 200);
+				}else {
+					json.addProperty("codigo", 500);
+					json.addProperty("mensagem", "Houve um erro durante o deletar conta.");
 				}
 				return json.toString();
 			}

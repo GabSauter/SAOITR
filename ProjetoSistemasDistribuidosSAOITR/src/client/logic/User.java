@@ -145,6 +145,36 @@ public class User {
         	System.out.println("Logout: JsonObject ta null");
         }
 	}
+	
+	public String deleteAccount(String email, String password, String token, int userId) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id_operacao", 8);
+		json.addProperty("email", email);
+		json.addProperty("senha", password);
+		json.addProperty("token", token);
+		json.addProperty("id_usuario", userId);
+		
+		return json.toString();
+	}
+	
+	public void deleteAccountResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Usuário deletado com sucesso");
+	    		this.setEstaLogado(false);
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Logout: JsonObject ta null");
+        }
+	}
 
 	public String getName() {
 		return name;

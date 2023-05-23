@@ -59,7 +59,7 @@ public class HomeLayout extends JFrame {
 				btnUpdateRegisterAction();
 			}
 		});
-		btnUpdateRegister.setBounds(305, 7, 167, 23);
+		btnUpdateRegister.setBounds(303, 39, 167, 23);
 		contentPane.add(btnUpdateRegister);
 		
 		JButton btnIncidentReport = new JButton("Reportar Incidente");
@@ -68,7 +68,7 @@ public class HomeLayout extends JFrame {
 				btnIncidentReportAction();
 			}
 		});
-		btnIncidentReport.setBounds(10, 38, 137, 23);
+		btnIncidentReport.setBounds(10, 38, 208, 23);
 		contentPane.add(btnIncidentReport);
 		
 		JButton btnSearchIncidents = new JButton("Procurar Incidentes");
@@ -77,7 +77,7 @@ public class HomeLayout extends JFrame {
 				btnSearchIncidentsAction();
 			}
 		});
-		btnSearchIncidents.setBounds(10, 72, 137, 23);
+		btnSearchIncidents.setBounds(10, 72, 208, 23);
 		contentPane.add(btnSearchIncidents);
 		
 		JButton btnShowMyIncidents = new JButton("Mostrar Meus Incidentes");
@@ -86,8 +86,17 @@ public class HomeLayout extends JFrame {
 				btnShowMyIncidentsAction();
 			}
 		});
-		btnShowMyIncidents.setBounds(10, 106, 137, 23);
+		btnShowMyIncidents.setBounds(10, 106, 207, 23);
 		contentPane.add(btnShowMyIncidents);
+		
+		JButton btnDeleteUser = new JButton("Deletar cadastro");
+		btnDeleteUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnDeleteUserAction();
+			}
+		});
+		btnDeleteUser.setBounds(304, 70, 167, 23);
+		contentPane.add(btnDeleteUser);
 	}
 	
 	private void btnLogoutAction() {
@@ -135,6 +144,11 @@ public class HomeLayout extends JFrame {
 	
 	private void btnShowMyIncidentsAction() {
 		new ShowMyIncidentsLayout(user).setVisible(true);
+		this.dispose();
+	}
+	
+	private void btnDeleteUserAction() {
+		new DeleteUserLayout(user).setVisible(true);
 		this.dispose();
 	}
 }

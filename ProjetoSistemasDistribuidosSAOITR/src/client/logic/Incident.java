@@ -139,6 +139,38 @@ public class Incident {
         }
 	}
 	
+	public String editReportedIncident(String token, int userId, String date, String highway, int km, int incidentType, int incidentId) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id_operacao", 10);
+		json.addProperty("token", token);
+		json.addProperty("id_usuario", userId);
+		json.addProperty("id_incidente", incidentId);
+		json.addProperty("data", date);
+		json.addProperty("rodovia", highway);
+		json.addProperty("km", km);
+		json.addProperty("tipo_incidente", incidentType);
+		
+		return json.toString();
+	}
+	
+	public void editReportedIncidentResponse(String inputLine) {
+		Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(inputLine, JsonObject.class);
+        int codigo = 0;
+        
+        if(jsonObject != null) {
+        	codigo = jsonObject.get("codigo").getAsInt();
+	    	if(codigo == 200) {
+	    		System.out.println("Editar incidente do usuário: sucesso");
+	    	} else {
+	    		System.out.println(jsonObject.get("mensagem").getAsString());
+	    	}
+        }else {
+        	System.out.println("Editar incidente do usuário: JsonObject ta null");
+        }
+	}
+	
 	public int getId_incident() {
 		return id_incident;
 	}

@@ -186,4 +186,22 @@ public class UserDAO {
 		
 		return null;
 	}
+
+	public void deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException {
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement("delete from user where email = ? and password = ? and id = ? and token = ?");
+			
+			st.setString(1, email);
+			st.setString(2, password);
+			st.setInt(3, id_usuario);
+			st.setString(4, token);
+			
+			st.executeUpdate();
+		} finally {
+			Database.endStatement(st);
+			Database.disconnect();
+		}
+	}
 }

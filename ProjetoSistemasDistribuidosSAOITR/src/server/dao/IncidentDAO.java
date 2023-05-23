@@ -163,4 +163,30 @@ public class IncidentDAO {
 		}
 	}
 	
+	public boolean editIncident(String token, int user_id, int incident_id, String data, String highway, int km, int incident_type) throws SQLException {
+		PreparedStatement st = null;
+		
+		try {
+            st = conn.prepareStatement("update incident set date = ?, highway = ?, km = ?, incident_type = ? where id_user = ? and id_incident = ?");
+            st.setString(1, data);
+            st.setString(2, highway);
+            st.setInt(3, km);
+            st.setInt(4, incident_type);
+            st.setInt(5, user_id);
+            st.setInt(6, incident_id);
+
+            int manipulatedLines = st.executeUpdate();
+
+			if(manipulatedLines == 1) {
+				System.out.println("Incidente editado com sucesso.");
+				return true;
+			}
+			System.out.println("Incidente não encontrado");
+			return false;
+		} finally {
+			Database.endStatement(st);
+			Database.disconnect();
+		}
+	}
+	
 }

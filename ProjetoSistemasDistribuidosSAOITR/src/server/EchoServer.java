@@ -157,11 +157,33 @@ public class EchoServer extends Thread {
 	
 							break;
 						}
+						case 8: { 
+							
+							UserLogic userLogic = new UserLogic(jsonObject);
+							try {
+								outputLine = userLogic.deleteUserAccount();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
+						}
 						case 9: { // logout
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
 							try {
 								outputLine = userLogic.userLogout();
+							} catch (SQLException | IOException e) {
+								System.out.println(e.getMessage());
+							}
+	
+							break;
+						}
+						case 10: { // 
+							
+							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
+							try {
+								outputLine = incidentLogic.editIncident();
 							} catch (SQLException | IOException e) {
 								System.out.println(e.getMessage());
 							}

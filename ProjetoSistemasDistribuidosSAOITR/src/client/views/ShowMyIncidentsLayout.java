@@ -151,8 +151,8 @@ public class ShowMyIncidentsLayout extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
 		int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-		String date = model.getValueAt(row, 1).toString();
-		String higway = model.getValueAt(row, 2).toString();
+		//String date = model.getValueAt(row, 1).toString();
+		String highway = model.getValueAt(row, 2).toString();
 		int km = Integer.parseInt(model.getValueAt(row, 3).toString());
 		int incidentType = getIncidentTypeFromString(model.getValueAt(row, 4).toString());
 		
@@ -170,6 +170,8 @@ public class ShowMyIncidentsLayout extends JFrame {
 
         if (result == 0) {
             System.out.println("Botão editar foi clicado");
+            new EditIncidentReportedLayout(user, highway, km, incidentType, id).setVisible(true);
+    		this.dispose();
         } else if (result == 1) {
             System.out.println("Botão excluir foi clicado");
             System.out.println("Cliente: Operação de deletar incidente do usuário");
