@@ -42,12 +42,16 @@ public class Incident {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Incidente reportado com sucesso");
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Incidente reportado com sucesso");
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    	}
+        	}else {
+        		System.out.println("Incidente reportado: código está null");
+        	}
         }else {
         	System.out.println("Incidente reportado: JsonObject ta null");
         }
@@ -71,13 +75,16 @@ public class Incident {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Procurar incidentes reportado com sucesso");
-	    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Procurar incidentes reportado com sucesso");
+		    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    	}
+        	}else
+        		System.out.println("Procurar incidente reportado: codigo ta null");
         }else {
         	System.out.println("Procurar incidente reportado: JsonObject ta null");
         }
@@ -99,13 +106,16 @@ public class Incident {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Solicitar incidentes reportado pelo usuário: sucesso");
-	    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Solicitar incidentes reportado pelo usuário: sucesso");
+		    		this.incidentsList = jsonObject.get("lista_incidentes").getAsJsonArray();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    	}
+        	}else
+        		System.out.println("Solicitar incidentes reportado pelo usuário: codigo ta null");
         }else {
         	System.out.println("Solicitar incidentes reportado pelo usuário: JsonObject ta null");
         }
@@ -128,12 +138,15 @@ public class Incident {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Deletar incidente do usuário: sucesso");
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Deletar incidente do usuário: sucesso");
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    	}
+        	}else
+        		System.out.println("Deletar incidente do usuário: codigo ta null");
         }else {
         	System.out.println("Deletar incidente do usuário: JsonObject ta null");
         }
@@ -160,12 +173,15 @@ public class Incident {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Editar incidente do usuário: sucesso");
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Editar incidente do usuário: sucesso");
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    	}
+        	}else
+        		System.out.println("Editar incidente do usuário: codigo ta null");
         }else {
         	System.out.println("Editar incidente do usuário: JsonObject ta null");
         }

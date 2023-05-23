@@ -28,10 +28,10 @@ public class DeleteUserLayout extends JFrame {
 	User user;
 	private JTextField txtFieldEmail;
 	private JPasswordField txtFieldPassword;
+	
 	public DeleteUserLayout(User user) {
 		this.user = user;
 		initComponents();
-		
 	}
 	
 	private void initComponents() {
