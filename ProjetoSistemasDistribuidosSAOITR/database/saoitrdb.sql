@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Tempo de geração: 14/05/2023 às 17:42
+-- Tempo de geração: 23/05/2023 às 22:23
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -24,6 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `incident`
+--
+
+CREATE TABLE `incident` (
+  `id_incident` int(255) NOT NULL,
+  `id_user` int(255) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `highway` varchar(255) NOT NULL,
+  `km` int(255) NOT NULL,
+  `incident_type` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `incident`
+--
+
+INSERT INTO `incident` (`id_incident`, `id_user`, `date`, `highway`, `km`, `incident_type`) VALUES
+(12, 42, '2023-05-22 22:21:43', 'AB-123', 123, 5),
+(15, 44, '2023-05-23 15:00:00', 'BR-222', 97, 7),
+(16, 44, '2023-05-23 15:30:00', 'BR-222', 67, 10);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `user`
 --
 
@@ -40,12 +64,20 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `token`) VALUES
-(22, 'Gabriel', 'gabriel@gmail.com', 'qkl|sov;<=', ''),
-(23, 'gabriel', 'gabrielsauter@gmail.com', 'qkl|sov;<=', '');
+(41, 'Gabriel Oliveira', 'gabriel@hotmail.com', '}rl}jl:;<', ''),
+(42, 'abcde', 'abcdefgh@gmail.com', 'jklmn:;<=', ''),
+(44, 'Gabriel Login', 'gabriellogin@hotmail.com', '~sm~km;<=>', '');
 
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices de tabela `incident`
+--
+ALTER TABLE `incident`
+  ADD PRIMARY KEY (`id_incident`),
+  ADD KEY `incident_ibfk_1` (`id_user`);
 
 --
 -- Índices de tabela `user`
@@ -58,10 +90,26 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT de tabela `incident`
+--
+ALTER TABLE `incident`
+  MODIFY `id_incident` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
 -- AUTO_INCREMENT de tabela `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `incident`
+--
+ALTER TABLE `incident`
+  ADD CONSTRAINT `incident_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

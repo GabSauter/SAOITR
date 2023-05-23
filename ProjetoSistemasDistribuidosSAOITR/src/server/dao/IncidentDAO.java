@@ -105,7 +105,7 @@ public class IncidentDAO {
 		}
 	}
 	
-	public JsonArray searchMyIncidents(String token, int user_id) throws SQLException { // Falta verificar o token
+	public JsonArray searchMyIncidents(String token, int user_id) throws SQLException { // Falta  verificar token
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -114,6 +114,7 @@ public class IncidentDAO {
             st = conn.prepareStatement("SELECT * FROM incident WHERE id_user = ?");
             
             st.setInt(1, user_id);
+            st.setString(2, token);
 
             rs = st.executeQuery();
 
