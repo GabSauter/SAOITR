@@ -3,6 +3,7 @@ package server.service;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import server.dao.Database;
 import server.dao.UserDAO;
@@ -43,5 +44,10 @@ public class UserService {
 	public void deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException, IOException {
 		Connection conn = Database.connect();
 		new UserDAO(conn).deleteUserAccount(token, id_usuario, email, password);
+	}
+	
+	public List<User> getallLoggedIn() throws SQLException, IOException{
+		Connection conn = Database.connect();
+		return new UserDAO(conn).getallLoggedIn();
 	}
 }

@@ -2,7 +2,6 @@ package server;
 
 import java.net.*;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,43 +16,7 @@ public class EchoServer extends Thread {
 
 	protected Socket clientSocket;
 
-	public static void main(String[] args) throws IOException {
-        
-		ServerSocket serverSocket = null;
-		
-		try (Scanner input = new Scanner(System.in)) {
-			try {
-				System.out.println("Qual é a porta? (int)");
-				// serverSocket = new ServerSocket(23000);
-				serverSocket = new ServerSocket(input.nextInt());
-				input.nextLine();
-				System.out.println("Connection Socket Created");
-				try {
-					while (true) {
-						System.out.println("Waiting for Connection");
-						new EchoServer(serverSocket.accept());
-					}
-				} catch (IOException e) {
-					System.err.println("Accept failed.");
-					System.exit(1);
-				}
-			} catch (IOException e) {
-				System.err.println("Could not listen on port");
-				System.exit(1);
-			}
-			finally {
-				try {
-					assert serverSocket != null;
-					serverSocket.close();
-				} catch (IOException e) {
-					System.err.println("Could not close port");
-					System.exit(1);
-				}
-			}
-		}
-	}
-
-	private EchoServer(Socket clientSoc) {
+	public EchoServer(Socket clientSoc) {
 		clientSocket = clientSoc;
 		start();
 	}
@@ -63,7 +26,7 @@ public class EchoServer extends Thread {
 		try {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
+			
 			try {
 				String inputLine;
 				String outputLine = "";

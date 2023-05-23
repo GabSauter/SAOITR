@@ -89,6 +89,10 @@ public class ShowMyIncidentsLayout extends JFrame {
 		});
 		btnGetMyIncidentsList.setBounds(10, 85, 157, 23);
 		contentPane.add(btnGetMyIncidentsList);
+		
+		JLabel lblNewLabel_1 = new JLabel("*Clique no incidente para editar ou deletar");
+		lblNewLabel_1.setBounds(407, 94, 234, 14);
+		contentPane.add(lblNewLabel_1);
 	}
 	
 	private void btnBackAction() {

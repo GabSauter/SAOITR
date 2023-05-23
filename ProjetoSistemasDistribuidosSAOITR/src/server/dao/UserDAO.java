@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import server.entities.User;
@@ -201,6 +203,35 @@ public class UserDAO {
 			st.executeUpdate();
 		} finally {
 			Database.endStatement(st);
+			Database.disconnect();
+		}
+	}
+	
+	public List<User> getallLoggedIn() throws SQLException{
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select * from user where token != ''");
+			rs = st.executeQuery();
+			
+			List<User> loggedInUsers = new ArrayList<User>();
+			
+			while(rs.next()) {
+				User loggedInUser = new User();
+				loggedInUser.setIdUsuario(rs.getInt("id"));
+				loggedInUser.setName(rs.getString("name"));
+				loggedInUser.setEmail(rs.getString("email"));
+				loggedInUser.setPassword(rs.getString("password"));
+				loggedInUser.setToken(rs.getString("token"));
+				loggedInUsers.add(loggedInUser);
+			}
+			
+			return loggedInUsers;
+			
+		} finally {
+			Database.endStatement(st);
+			Database.finalizarResultSet(rs);
 			Database.disconnect();
 		}
 	}
