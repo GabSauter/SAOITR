@@ -120,7 +120,7 @@ public class EditIncidentReportedLayout extends JFrame {
 		
 		String highway = txtFieldHighway.getText().toString();
 		int km = Integer.parseInt(txtFieldKm.getText().toString());
-		int incidentType = cbIncidentType.getSelectedIndex();
+		int incidentType = cbIncidentType.getSelectedIndex() + 1;
 		
 		String userInput = new Incident().editReportedIncident(user.getToken(), user.getId_usuario(), date, highway, km, incidentType, incidentId);
 		String inputLine = new SocketLogic().sendAndReceive(userInput);

@@ -165,7 +165,7 @@ public class ShowIncidentsLayout extends JFrame {
 		if(lanes.equals("-")) 
 			lanes = null; //Ver se deve enviar null ou ""
 		
-		int period = cbPeriod.getSelectedIndex();
+		int period = cbPeriod.getSelectedIndex() + 1;
 		String userInput = new Incident().searchIncidents(highway, date, lanes, period);
 		String inputLine = new SocketLogic().sendAndReceive(userInput);
 		
