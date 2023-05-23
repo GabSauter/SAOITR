@@ -68,13 +68,13 @@ public class IncidentLogic {
 					finalLane = lanes[1];
 				}
 				String lanesRange = (json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) ? json.get("faixa_km").toString() : null;
-				if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
+				//if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
 					incidentList = new IncidentService().searchIncidents(incident.getHighway(), incident.getDate(), initialLane, finalLane, period);
 		        	return createResultJson(5, true);
-				}else {
-					System.out.println("Erro 1 - Erro de validação");
-					return createResultJson(5, false);
-				}
+//				}else {
+//					System.out.println("Erro 1 - Erro de validação");
+//					return createResultJson(5, false);
+//				}
 			}
 		}catch(Exception e) {
 			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");

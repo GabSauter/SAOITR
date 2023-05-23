@@ -1,6 +1,5 @@
 package client.views;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,8 +10,6 @@ import javax.swing.text.MaskFormatter;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import client.cryptography.CaesarCipher;
 import client.logic.Incident;
 import client.logic.SocketLogic;
 import client.logic.User;
@@ -25,9 +22,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
-import java.awt.Component;
-import javax.swing.Box;
 
 public class IncidentReportLayout extends JFrame {
 
@@ -60,18 +56,17 @@ public class IncidentReportLayout extends JFrame {
 		});
 		btnBack.setBounds(10, 11, 47, 23);
 		contentPane.add(btnBack);
-		MaskFormatter maskData;
-		try {
-			maskData = new MaskFormatter("####/##/## ##:##:##");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		
 		JLabel lblRodovia = new JLabel("Rodovia:");
 		lblRodovia.setBounds(10, 48, 46, 14);
 		contentPane.add(lblRodovia);
 		
-		txtFieldHighway = new JTextField();
+		try {
+			MaskFormatter highwayMask = new MaskFormatter("UU-###");
+			txtFieldHighway = new JFormattedTextField(highwayMask);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
 		txtFieldHighway.setColumns(10);
 		txtFieldHighway.setBounds(111, 45, 196, 20);
 		contentPane.add(txtFieldHighway);
@@ -125,20 +120,25 @@ public class IncidentReportLayout extends JFrame {
         JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
         int codigo = 0;
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Incidente reportado com sucesso");
-	    		JOptionPane.showMessageDialog(this, "Incidente reportado com sucesso", "Operação de Reportar Incidentes", JOptionPane.INFORMATION_MESSAGE);
-	    		new HomeLayout(user).setVisible(true);
-    			this.dispose();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    		JOptionPane.showMessageDialog(this, "Falha em reportar incidente", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Incidente reportado com sucesso");
+		    		JOptionPane.showMessageDialog(this, "Incidente reportado com sucesso", "Operação de Reportar Incidentes", JOptionPane.INFORMATION_MESSAGE);
+		    		new HomeLayout(user).setVisible(true);
+	    			this.dispose();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    		JOptionPane.showMessageDialog(this, "Falha em reportar incidente", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
+		    	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
         }else {
         	System.out.println("Incidente reportado: JsonObject ta null");
         	JOptionPane.showMessageDialog(this, "JsonObject ta null", "Operação de Reportar Incidentes", JOptionPane.ERROR_MESSAGE);
         }
+        
+        
 	}
 
 	private void btnBackAction() {

@@ -122,9 +122,6 @@ public class User {
 		json.addProperty("token", this.token);
 		json.addProperty("id_usuario", this.id_usuario);
 		
-		this.setToken("");
-		this.setId_usuario(0);
-		
 		return json.toString();
 	}
 	
@@ -138,6 +135,8 @@ public class User {
 	    	if(codigo == 200) {
 	    		System.out.println("Logout feito com sucesso");
 	    		this.setEstaLogado(false);
+	    		this.setToken("");
+	    		this.setId_usuario(0);
 	    	} else {
 	    		System.out.println(jsonObject.get("mensagem").getAsString());
 	    	}

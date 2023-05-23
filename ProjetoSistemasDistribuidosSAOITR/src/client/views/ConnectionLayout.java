@@ -3,6 +3,7 @@ package client.views;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import client.logic.SocketLogic;
 
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
 
 public class ConnectionLayout extends JFrame {
@@ -50,7 +52,6 @@ public class ConnectionLayout extends JFrame {
 		txtFieldPort.setBounds(103, 39, 149, 20);
 		contentPane.add(txtFieldPort);
 		txtFieldPort.setColumns(10);
-		//Colocar Mask no ip
 		
 		JLabel lblIp = new JLabel("Server IP:");
 		lblIp.setBounds(21, 11, 80, 14);

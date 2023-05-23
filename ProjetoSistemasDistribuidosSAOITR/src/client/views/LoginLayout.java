@@ -101,13 +101,16 @@ public class LoginLayout extends JFrame {
 		
         JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
         if(jsonObject != null) {
-        	int codigo = jsonObject.get("codigo").getAsInt();
-        	if(codigo == 200) {
-        		new HomeLayout(user).setVisible(true);
-    			this.dispose();
-        	}else {
-        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de login", JOptionPane.ERROR_MESSAGE);
-        	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	int codigo = jsonObject.get("codigo").getAsInt();
+	        	if(codigo == 200) {
+	        		new HomeLayout(user).setVisible(true);
+	    			this.dispose();
+	        	}else {
+	        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de login", JOptionPane.ERROR_MESSAGE);
+	        	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de login", JOptionPane.ERROR_MESSAGE);
         }else {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de login", JOptionPane.ERROR_MESSAGE);
         }

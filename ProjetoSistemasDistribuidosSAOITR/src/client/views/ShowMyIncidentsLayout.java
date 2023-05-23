@@ -111,37 +111,39 @@ public class ShowMyIncidentsLayout extends JFrame {
 		
         JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
         if(jsonObject != null) {
+        	
         	int codigo = jsonObject.get("codigo").getAsInt();
         	if(codigo == 200) {
-        		
-        		DefaultTableModel model = (DefaultTableModel) table.getModel();
-        		model.fireTableDataChanged();
-        		model.setRowCount(0);
-        		
-        		List<Incident> incidents = new ArrayList<Incident>();
-        		
-        		for (JsonElement jsonElement : incident.getIncidentsList()) {
-        			Incident incident3 = new Incident();
-        			
-        			incident3.setId_incident(jsonElement.getAsJsonObject().get("id_incidente").getAsInt());
-        			incident3.setDate(jsonElement.getAsJsonObject().get("data").getAsString());
-        			incident3.setHighway(jsonElement.getAsJsonObject().get("rodovia").getAsString());
-        			incident3.setKm(jsonElement.getAsJsonObject().get("km").getAsInt());
-        			incident3.setIncident_type(jsonElement.getAsJsonObject().get("tipo_incidente").getAsInt());
-        			
-        			incidents.add(incident3);
-                }
-        		
-        		for(Incident incident2: incidents) {
-        			model.addRow(new Object[] {
-        					incident2.getId_incident(),
-        					incident2.getDate(),
-        					incident2.getHighway(),
-        					incident2.getKm(),
-        					getIncidentTypeInString(incident2.getIncident_type())
-        			});
-        		}
-        		
+        		if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        		DefaultTableModel model = (DefaultTableModel) table.getModel();
+	        		model.fireTableDataChanged();
+	        		model.setRowCount(0);
+	        		
+	        		List<Incident> incidents = new ArrayList<Incident>();
+	        		
+	        		for (JsonElement jsonElement : incident.getIncidentsList()) {
+	        			Incident incident3 = new Incident();
+	        			
+	        			incident3.setId_incident(jsonElement.getAsJsonObject().get("id_incidente").getAsInt());
+	        			incident3.setDate(jsonElement.getAsJsonObject().get("data").getAsString());
+	        			incident3.setHighway(jsonElement.getAsJsonObject().get("rodovia").getAsString());
+	        			incident3.setKm(jsonElement.getAsJsonObject().get("km").getAsInt());
+	        			incident3.setIncident_type(jsonElement.getAsJsonObject().get("tipo_incidente").getAsInt());
+	        			
+	        			incidents.add(incident3);
+	                }
+	        		
+	        		for(Incident incident2: incidents) {
+	        			model.addRow(new Object[] {
+	        					incident2.getId_incident(),
+	        					incident2.getDate(),
+	        					incident2.getHighway(),
+	        					incident2.getKm(),
+	        					getIncidentTypeInString(incident2.getIncident_type())
+	        			});
+	        		}
+        		}else
+            		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de mostrar meus incidentes", JOptionPane.ERROR_MESSAGE);
         	}else {
         		JOptionPane.showMessageDialog(this, "Mostrar meus incidentes deu errado", "Erro de mostrar meus incidentes", JOptionPane.ERROR_MESSAGE);
         	}
@@ -155,14 +157,11 @@ public class ShowMyIncidentsLayout extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
 		int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-		//String date = model.getValueAt(row, 1).toString();
 		String highway = model.getValueAt(row, 2).toString();
 		int km = Integer.parseInt(model.getValueAt(row, 3).toString());
 		int incidentType = getIncidentTypeFromString(model.getValueAt(row, 4).toString());
-		
         String[] options = { "Editar", "Excluir" };
 
-        // Show the JOptionPane with two buttons
         int result = JOptionPane.showOptionDialog(null,
                 "Escolha uma opção:",
                 "Editar ou excluir?",

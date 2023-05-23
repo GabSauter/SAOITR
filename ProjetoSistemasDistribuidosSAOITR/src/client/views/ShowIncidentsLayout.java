@@ -9,8 +9,6 @@ import javax.swing.text.MaskFormatter;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import client.cryptography.CaesarCipher;
 import client.logic.Incident;
 import client.logic.SocketLogic;
 import client.logic.User;
@@ -122,7 +120,12 @@ public class ShowIncidentsLayout extends JFrame {
 		txtFieldFinalLane.setBounds(270, 92, 86, 20);
 		contentPane.add(txtFieldFinalLane);
 		
-		txtFieldHighway = new JTextField();
+		try {
+			MaskFormatter highwayMask = new MaskFormatter("UU-###");
+			txtFieldHighway = new JFormattedTextField(highwayMask);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
 		txtFieldHighway.setBounds(96, 67, 172, 20);
 		contentPane.add(txtFieldHighway);
 		txtFieldHighway.setColumns(10);
@@ -140,7 +143,6 @@ public class ShowIncidentsLayout extends JFrame {
 			MaskFormatter dataMask = new MaskFormatter("####-##-##");
 			txtFieldDate = new JFormattedTextField(dataMask);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		txtFieldDate.setColumns(10);
@@ -163,7 +165,7 @@ public class ShowIncidentsLayout extends JFrame {
 		if(lanes.equals("-")) 
 			lanes = null; //Ver se deve enviar null ou ""
 		
-		int period = cbPeriod.getSelectedIndex() + 1;
+		int period = cbPeriod.getSelectedIndex();
 		String userInput = new Incident().searchIncidents(highway, date, lanes, period);
 		String inputLine = new SocketLogic().sendAndReceive(userInput);
 		
@@ -172,36 +174,38 @@ public class ShowIncidentsLayout extends JFrame {
 		
         JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
         if(jsonObject != null) {
+        	
         	int codigo = jsonObject.get("codigo").getAsInt();
         	if(codigo == 200) {
-        		
-        		DefaultTableModel model = (DefaultTableModel) table.getModel();
-        		model.fireTableDataChanged();
-        		model.setRowCount(0);
-        		
-        		List<Incident> incidents = new ArrayList<Incident>();
-        		
-        		for (JsonElement jsonElement : incident.getIncidentsList()) {
-        			Incident incident3 = new Incident();
-        			
-        			incident3.setId_incident(jsonElement.getAsJsonObject().get("id_incidente").getAsInt());
-        			incident3.setDate(jsonElement.getAsJsonObject().get("data").getAsString());
-        			incident3.setHighway(jsonElement.getAsJsonObject().get("rodovia").getAsString());
-        			incident3.setKm(jsonElement.getAsJsonObject().get("km").getAsInt());
-        			incident3.setIncident_type(jsonElement.getAsJsonObject().get("tipo_incidente").getAsInt());
-        			
-        			incidents.add(incident3);
-                }
-        		
-        		for(Incident incident2: incidents) {
-        			model.addRow(new Object[] {
-        					incident2.getDate(),
-        					incident2.getHighway(),
-        					incident2.getKm(),
-        					getIncidentTypeInString(incident2.getIncident_type())
-        			});
-        		}
-        		
+        		if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        		DefaultTableModel model = (DefaultTableModel) table.getModel();
+	        		model.fireTableDataChanged();
+	        		model.setRowCount(0);
+	        		
+	        		List<Incident> incidents = new ArrayList<Incident>();
+	        		
+	        		for (JsonElement jsonElement : incident.getIncidentsList()) {
+	        			Incident incident3 = new Incident();
+	        			
+	        			incident3.setId_incident(jsonElement.getAsJsonObject().get("id_incidente").getAsInt());
+	        			incident3.setDate(jsonElement.getAsJsonObject().get("data").getAsString());
+	        			incident3.setHighway(jsonElement.getAsJsonObject().get("rodovia").getAsString());
+	        			incident3.setKm(jsonElement.getAsJsonObject().get("km").getAsInt());
+	        			incident3.setIncident_type(jsonElement.getAsJsonObject().get("tipo_incidente").getAsInt());
+	        			
+	        			incidents.add(incident3);
+	                }
+	        		
+	        		for(Incident incident2: incidents) {
+	        			model.addRow(new Object[] {
+	        					incident2.getDate(),
+	        					incident2.getHighway(),
+	        					incident2.getKm(),
+	        					getIncidentTypeInString(incident2.getIncident_type())
+	        			});
+	        		}
+        		}else
+            		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}else {
         		JOptionPane.showMessageDialog(this, "Mostrar incidentes deu errado", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}

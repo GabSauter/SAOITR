@@ -3,8 +3,6 @@ package client.views;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import client.cryptography.CaesarCipher;
-import client.logic.Incident;
 import client.logic.SocketLogic;
 import client.logic.User;
 
@@ -106,13 +103,16 @@ public class DeleteUserLayout extends JFrame {
 		
         JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
         if(jsonObject != null) {
-        	int codigo = jsonObject.get("codigo").getAsInt();
-        	if(codigo == 200) {
-        		new LoginLayout().setVisible(true);
-    			this.dispose();
-        	}else {
-        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de deletar cadastro", JOptionPane.ERROR_MESSAGE);
-        	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	int codigo = jsonObject.get("codigo").getAsInt();
+	        	if(codigo == 200) {
+	        		new LoginLayout().setVisible(true);
+	    			this.dispose();
+	        	}else {
+	        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de deletar cadastro", JOptionPane.ERROR_MESSAGE);
+	        	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de deletar cadastro", JOptionPane.ERROR_MESSAGE);
         }else {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de deletar cadastro", JOptionPane.ERROR_MESSAGE);
         }

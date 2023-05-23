@@ -33,7 +33,6 @@ public class UserRegisterLayout extends JFrame {
 
 	public UserRegisterLayout() {
 		this.initComponents();
-		
 	}
 	
 	private void initComponents() {
@@ -121,16 +120,19 @@ public class UserRegisterLayout extends JFrame {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Cadastrado com sucesso");
-	    		JOptionPane.showMessageDialog(this, "Cadastrado com sucesso", "Operação de Cadastro", JOptionPane.INFORMATION_MESSAGE);
-	    		new LoginLayout().setVisible(true);
-	    		this.dispose();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    		JOptionPane.showMessageDialog(this, "Falha no cadastro", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Cadastrado com sucesso");
+		    		JOptionPane.showMessageDialog(this, "Cadastrado com sucesso", "Operação de Cadastro", JOptionPane.INFORMATION_MESSAGE);
+		    		new LoginLayout().setVisible(true);
+		    		this.dispose();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    		JOptionPane.showMessageDialog(this, "Falha no cadastro", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);
+		    	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);
         }else {
         	System.out.println("Cadastro: JsonObject ta null");
         	JOptionPane.showMessageDialog(this, "JsonObject ta null", "Operação de Cadastro", JOptionPane.ERROR_MESSAGE);

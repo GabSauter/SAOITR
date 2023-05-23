@@ -1,7 +1,5 @@
 package client.views;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -124,21 +122,25 @@ public class UpdateUserRegisterLayout extends JFrame {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Cadastrado atualizado com sucesso");
-	    		JOptionPane.showMessageDialog(this, "Cadastrado atualizado com sucesso", "Operação de Atualizar Cadastro", JOptionPane.INFORMATION_MESSAGE);
-	    		
-	    		new HomeLayout(this.user).setVisible(true);
-	    		this.dispose();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    		JOptionPane.showMessageDialog(this, "Falha na atualização de cadastro", "Operação de Atualizar Cadastro", JOptionPane.ERROR_MESSAGE);
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Cadastrado atualizado com sucesso");
+		    		JOptionPane.showMessageDialog(this, "Cadastrado atualizado com sucesso", "Operação de Atualizar Cadastro", JOptionPane.INFORMATION_MESSAGE);
+		    		
+		    		new HomeLayout(this.user).setVisible(true);
+		    		this.dispose();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    		JOptionPane.showMessageDialog(this, "Falha na atualização de cadastro", "Operação de Atualizar Cadastro", JOptionPane.ERROR_MESSAGE);
+		    	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de Atualizar Cadastro", JOptionPane.ERROR_MESSAGE);
         }else {
         	System.out.println("Cadastro: JsonObject ta null");
         	JOptionPane.showMessageDialog(this, "JsonObject ta null", "Operação de Atualizar Cadastro", JOptionPane.ERROR_MESSAGE);
         }
+        
 	}
 	
 	private void btnBackAction() {

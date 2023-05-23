@@ -1,7 +1,5 @@
 package client.views;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -59,7 +57,7 @@ public class HomeLayout extends JFrame {
 				btnUpdateRegisterAction();
 			}
 		});
-		btnUpdateRegister.setBounds(303, 39, 167, 23);
+		btnUpdateRegister.setBounds(256, 38, 214, 23);
 		contentPane.add(btnUpdateRegister);
 		
 		JButton btnIncidentReport = new JButton("Reportar Incidente");
@@ -68,7 +66,7 @@ public class HomeLayout extends JFrame {
 				btnIncidentReportAction();
 			}
 		});
-		btnIncidentReport.setBounds(10, 38, 208, 23);
+		btnIncidentReport.setBounds(10, 38, 236, 23);
 		contentPane.add(btnIncidentReport);
 		
 		JButton btnSearchIncidents = new JButton("Procurar Incidentes");
@@ -77,7 +75,7 @@ public class HomeLayout extends JFrame {
 				btnSearchIncidentsAction();
 			}
 		});
-		btnSearchIncidents.setBounds(10, 72, 208, 23);
+		btnSearchIncidents.setBounds(10, 72, 236, 23);
 		contentPane.add(btnSearchIncidents);
 		
 		JButton btnShowMyIncidents = new JButton("Mostrar Meus Incidentes");
@@ -86,7 +84,7 @@ public class HomeLayout extends JFrame {
 				btnShowMyIncidentsAction();
 			}
 		});
-		btnShowMyIncidents.setBounds(10, 106, 207, 23);
+		btnShowMyIncidents.setBounds(10, 106, 236, 23);
 		contentPane.add(btnShowMyIncidents);
 		
 		JButton btnDeleteUser = new JButton("Deletar cadastro");
@@ -95,7 +93,7 @@ public class HomeLayout extends JFrame {
 				btnDeleteUserAction();
 			}
 		});
-		btnDeleteUser.setBounds(304, 70, 167, 23);
+		btnDeleteUser.setBounds(256, 72, 215, 23);
 		contentPane.add(btnDeleteUser);
 	}
 	
@@ -111,16 +109,19 @@ public class HomeLayout extends JFrame {
         int codigo = 0;
         
         if(jsonObject != null) {
-        	codigo = jsonObject.get("codigo").getAsInt();
-	    	if(codigo == 200) {
-	    		System.out.println("Logout feito com sucesso");
-	    		this.user.setEstaLogado(false);
-	    		new LoginLayout().setVisible(true);
-    			this.dispose();
-	    	} else {
-	    		System.out.println(jsonObject.get("mensagem").getAsString());
-	    		JOptionPane.showMessageDialog(this, "Houve um erro durante o logout.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
-	    	}
+        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+	        	codigo = jsonObject.get("codigo").getAsInt();
+		    	if(codigo == 200) {
+		    		System.out.println("Logout feito com sucesso");
+		    		this.user.setEstaLogado(false);
+		    		new LoginLayout().setVisible(true);
+	    			this.dispose();
+		    	} else {
+		    		System.out.println(jsonObject.get("mensagem").getAsString());
+		    		JOptionPane.showMessageDialog(this, "Houve um erro durante o logout.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
+		    	}
+        	}else
+        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de logout", JOptionPane.ERROR_MESSAGE);
         }else {
         	System.out.println("Logout: JsonObject ta null");
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de logout", JOptionPane.ERROR_MESSAGE);
