@@ -77,15 +77,15 @@ public class IncidentLogic {
 	            incident.setHighway(json.get("rodovia").getAsString());
 	            int period = json.get("periodo").getAsInt();
 	            
-	            String initialLane = null;
-	            String finalLane = null;
+	            String initialLane = "";
+	            String finalLane = "";
 	            
-	            if(json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) {
+	            if(json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull() && !json.get("faixa_km").getAsString().equals("")) {
 	                String[] lanes = json.get("faixa_km").getAsString().split("-");
 	                initialLane = lanes[0];
 	                finalLane = lanes[1];
 	            }
-	            String lanesRange = (json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) ? json.get("faixa_km").getAsString() : null;
+	            String lanesRange = (json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull() && !json.get("faixa_km").getAsString().equals("")) ? json.get("faixa_km").getAsString() : "";
 	            if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
 	                String[] date = incident.getDate().split(" ");
 	                incidentList = new IncidentService().searchIncidents(incident.getHighway(), date[0], initialLane, finalLane, period);

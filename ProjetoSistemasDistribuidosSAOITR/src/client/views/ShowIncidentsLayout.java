@@ -164,7 +164,7 @@ public class ShowIncidentsLayout extends JFrame {
 		String highway = txtFieldHighway.getText().toString();
 		String lanes = txtFieldInitialLane.getText().toString() + "-" + txtFieldFinalLane.getText().toString();
 		if(lanes.equals("-"))
-			lanes = null;
+			lanes = "";
 		
 		int period = cbPeriod.getSelectedIndex() + 1;
 		String userInput = new Incident().searchIncidents(highway, date, lanes, period);

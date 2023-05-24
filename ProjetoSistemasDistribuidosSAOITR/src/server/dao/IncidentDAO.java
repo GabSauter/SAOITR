@@ -63,8 +63,8 @@ public class IncidentDAO {
             }
             
 			String query = "SELECT * FROM incident WHERE highway = ? AND DATE(date) = ? AND" + periodCondition;
-			System.out.println(initialLane + finalLane);
-            if (initialLane != null && finalLane != null) {
+			
+            if (!initialLane.equals("") && !finalLane.equals("")) {
                 query += " AND km BETWEEN ? AND ?";
             }
             
@@ -75,7 +75,7 @@ public class IncidentDAO {
             st.setString(1, highway);
             st.setString(2, date);
 
-            if (initialLane != null && finalLane != null) {
+            if (!initialLane.equals("") && !finalLane.equals("")) {
                 st.setString(3, initialLane);
                 st.setString(4, finalLane);
             }

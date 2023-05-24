@@ -95,8 +95,8 @@ public class IncidentValidation {
     }
 
     private static boolean validateRange(String range) {
-        if (range == null) {
-            return true; // Range can be null
+        if (range.equals("")) {
+            return true; // Range can be ""
         }
         if (!range.matches(RANGE_REGEX)) {
             System.out.println("Erro: Formato de faixa de pistas inválido.");
