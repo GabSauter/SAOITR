@@ -136,7 +136,7 @@ public class EditIncidentReportedLayout extends JFrame {
 		    	if(codigo == 200) {
 		    		System.out.println("Incidente reportado com sucesso");
 		    		JOptionPane.showMessageDialog(this, "Incidente reportado editado com sucesso", "Operação de editar Incidente reportado", JOptionPane.INFORMATION_MESSAGE);
-		    		new HomeLayout(user).setVisible(true);
+		    		new ShowMyIncidentsLayout(user).setVisible(true);
 	    			this.dispose();
 		    	} else {
 		    		System.out.println(jsonObject.get("mensagem").getAsString());
@@ -151,7 +151,7 @@ public class EditIncidentReportedLayout extends JFrame {
 	}
 
 	private void btnBackAction() {
-		new HomeLayout(user).setVisible(true);
+		new ShowMyIncidentsLayout(user).setVisible(true);
 		this.dispose();
 	}
 }
