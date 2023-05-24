@@ -98,7 +98,7 @@ public class UpdateUserRegisterLayout extends JFrame {
 				btnUpdateRegisterUserAction();
 			}
 		});
-		btnRegisterUser.setBounds(76, 166, 144, 23);
+		btnRegisterUser.setBounds(66, 166, 200, 23);
 		contentPane.add(btnRegisterUser);
 	}
 	

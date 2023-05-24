@@ -136,7 +136,7 @@ public class ShowIncidentsLayout extends JFrame {
 				btnShowIncidents();
 			}
 		});
-		btnShowIncidents.setBounds(10, 174, 172, 23);
+		btnShowIncidents.setBounds(96, 149, 184, 23);
 		contentPane.add(btnShowIncidents);
 		
 		try {

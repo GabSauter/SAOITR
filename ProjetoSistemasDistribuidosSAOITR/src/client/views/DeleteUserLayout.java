@@ -64,7 +64,7 @@ public class DeleteUserLayout extends JFrame {
 				btnDeleteAction();
 			}
 		});
-		btnDelete.setBounds(165, 110, 97, 23);
+		btnDelete.setBounds(132, 110, 160, 23);
 		contentPane.add(btnDelete);
 		
 		JLabel lblNewLabel = new JLabel("Deletar conta");

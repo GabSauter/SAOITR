@@ -95,7 +95,7 @@ public class UserRegisterLayout extends JFrame {
 				btnRegisterUserAction();
 			}
 		});
-		btnRegisterUser.setBounds(10, 163, 89, 23);
+		btnRegisterUser.setBounds(66, 166, 200, 23);
 		contentPane.add(btnRegisterUser);
 	}
 	

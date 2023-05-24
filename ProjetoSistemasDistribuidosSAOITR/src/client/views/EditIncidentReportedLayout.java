@@ -107,7 +107,7 @@ public class EditIncidentReportedLayout extends JFrame {
 				btnIncidentReportAction();
 			}
 		});
-		btnEditIncidentReported.setBounds(143, 133, 122, 23);
+		btnEditIncidentReported.setBounds(111, 133, 196, 23);
 		contentPane.add(btnEditIncidentReported);
 	}
 	

@@ -96,7 +96,7 @@ public class IncidentReportLayout extends JFrame {
 				btnIncidentReportAction();
 			}
 		});
-		btnIncidentReport.setBounds(176, 133, 89, 23);
+		btnIncidentReport.setBounds(111, 133, 196, 23);
 		contentPane.add(btnIncidentReport);
 	}
 	
