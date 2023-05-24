@@ -98,7 +98,7 @@ public class UpdateUserRegisterLayout extends JFrame {
 				btnUpdateRegisterUserAction();
 			}
 		});
-		btnRegisterUser.setBounds(10, 163, 89, 23);
+		btnRegisterUser.setBounds(76, 166, 144, 23);
 		contentPane.add(btnRegisterUser);
 	}
 	
@@ -127,7 +127,7 @@ public class UpdateUserRegisterLayout extends JFrame {
 		    	if(codigo == 200) {
 		    		System.out.println("Cadastrado atualizado com sucesso");
 		    		JOptionPane.showMessageDialog(this, "Cadastrado atualizado com sucesso", "Operação de Atualizar Cadastro", JOptionPane.INFORMATION_MESSAGE);
-		    		
+		    		this.user.setToken(jsonObject.get("token").getAsString());
 		    		new HomeLayout(this.user).setVisible(true);
 		    		this.dispose();
 		    	} else {

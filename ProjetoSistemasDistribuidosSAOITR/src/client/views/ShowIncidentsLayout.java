@@ -160,10 +160,11 @@ public class ShowIncidentsLayout extends JFrame {
 		System.out.println("Cliente: Operação de procurar incidente");
 		
 		String date = txtFieldDate.getText().toString() + " 00:00:00";
+		System.out.println(date);
 		String highway = txtFieldHighway.getText().toString();
 		String lanes = txtFieldInitialLane.getText().toString() + "-" + txtFieldFinalLane.getText().toString();
-		if(lanes.equals("-")) 
-			lanes = null; //Ver se deve enviar null ou ""
+		if(lanes.equals("-"))
+			lanes = null;
 		
 		int period = cbPeriod.getSelectedIndex() + 1;
 		String userInput = new Incident().searchIncidents(highway, date, lanes, period);
@@ -207,7 +208,7 @@ public class ShowIncidentsLayout extends JFrame {
         		}else
             		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}else {
-        		JOptionPane.showMessageDialog(this, "Mostrar incidentes deu errado", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
+        		JOptionPane.showMessageDialog(this, "Mostrar incidentes deu errado, talvez nenhum incidente foi encontrado", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}
         }else {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);

@@ -1,7 +1,5 @@
 package server.views;
 
-import java.awt.EventQueue;
-import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,19 +7,13 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.google.gson.JsonElement;
-
-import client.logic.Incident;
 import server.EchoServer;
 import server.entities.User;
-import server.logic.UserLogic;
 import server.service.UserService;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -31,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
+import java.awt.Color;
 
 public class ServerPortConnectionUI extends JFrame {
 
@@ -41,6 +34,7 @@ public class ServerPortConnectionUI extends JFrame {
 	ServerSocket serverSocket = null;
 	private JButton btnRefresh;
 	private JScrollPane scrollPane;
+	private JLabel lblServerStatus;
 	
 	public ServerPortConnectionUI() {
 		setTitle("Servidor");
@@ -67,7 +61,7 @@ public class ServerPortConnectionUI extends JFrame {
 				btnConnectServerAction();
 			}
 		});
-		btnConnectServer.setBounds(234, 11, 118, 23);
+		btnConnectServer.setBounds(234, 11, 136, 23);
 		contentPane.add(btnConnectServer);
 		
 		scrollPane = new JScrollPane();
@@ -91,8 +85,12 @@ public class ServerPortConnectionUI extends JFrame {
 				btnRefreshAction();
 			}
 		});
-		btnRefresh.setBounds(10, 61, 89, 23);
+		btnRefresh.setBounds(10, 61, 96, 23);
 		contentPane.add(btnRefresh);
+		
+		lblServerStatus = new JLabel("");
+		lblServerStatus.setBounds(380, 15, 164, 14);
+		contentPane.add(lblServerStatus);
 	}
 	
 	private void btnConnectServerAction() {
@@ -102,17 +100,23 @@ public class ServerPortConnectionUI extends JFrame {
 				System.out.println("Connection Socket Created");
 				
 				try {
+					lblServerStatus.setForeground(Color.GREEN);
+					lblServerStatus.setText("Status: Sevidor rodando.");
 					while (true) {
 						System.out.println("Waiting for Connection");
 						new EchoServer(serverSocket.accept());
 					}
 				} catch (IOException e) {
 					System.err.println("Accept failed.");
+					lblServerStatus.setForeground(Color.RED);
+					lblServerStatus.setText("Status: Erro no sevidor.");
 					JOptionPane.showMessageDialog(this, "Accept failed.", "Accept failed.", JOptionPane.ERROR_MESSAGE);
 					System.exit(1);
 				}
 			} catch (IOException e) {
 				System.err.println("Could not listen on port");
+				lblServerStatus.setForeground(Color.RED);
+				lblServerStatus.setText("Status: Erro no sevidor.");
 				JOptionPane.showMessageDialog(this, "Could not listen on port", "Could not listen on port", JOptionPane.ERROR_MESSAGE);
 				System.exit(1);
 			}
@@ -122,6 +126,8 @@ public class ServerPortConnectionUI extends JFrame {
 					serverSocket.close();
 				} catch (IOException e) {
 					System.err.println("Could not close port");
+					lblServerStatus.setForeground(Color.RED);
+					lblServerStatus.setText("Status: Erro no sevidor.");
 					JOptionPane.showMessageDialog(this, "Could not close port", "Could not close port", JOptionPane.ERROR_MESSAGE);
 					System.exit(1);
 				}

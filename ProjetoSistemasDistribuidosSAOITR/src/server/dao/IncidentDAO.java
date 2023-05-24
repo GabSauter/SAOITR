@@ -37,7 +37,7 @@ public class IncidentDAO {
 		}
 	}
 	
-	public JsonArray searchIncidents(String highway, String date, String initialLane, String finalLane, int period) throws SQLException { //String date no formato YYYY-MM-DD HH:MM:SS 
+	public JsonArray searchIncidents(String highway, String date, String initialLane, String finalLane, int period) throws SQLException {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -63,7 +63,7 @@ public class IncidentDAO {
             }
             
 			String query = "SELECT * FROM incident WHERE highway = ? AND DATE(date) = ? AND" + periodCondition;
-
+			System.out.println(initialLane + finalLane);
             if (initialLane != null && finalLane != null) {
                 query += " AND km BETWEEN ? AND ?";
             }
@@ -114,7 +114,6 @@ public class IncidentDAO {
             st = conn.prepareStatement("SELECT * FROM incident WHERE id_user = ?");
             
             st.setInt(1, user_id);
-            st.setString(2, token);
 
             rs = st.executeQuery();
 

@@ -47,7 +47,7 @@ public class EchoServer extends Thread {
 							operation = jsonObject.get("id_operacao").getAsInt();
 
 					switch (operation) {
-						case 1: { // Register
+						case 1: {
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
 							outputLine = userLogic.userRegister();
@@ -61,7 +61,7 @@ public class EchoServer extends Thread {
 							
 							break;
 						}
-						case 3: { // Login
+						case 3: {
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
 							outputLine = userLogic.userLogin();
@@ -99,14 +99,14 @@ public class EchoServer extends Thread {
 	
 							break;
 						}
-						case 9: { // logout
+						case 9: {
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
 							outputLine = userLogic.userLogout();
 	
 							break;
 						}
-						case 10: { // 
+						case 10: {
 							
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
 							outputLine = incidentLogic.editIncident();
@@ -117,7 +117,7 @@ public class EchoServer extends Thread {
 							System.out.println("Operação inválida");
 							JsonObject json = new JsonObject();
 							json.addProperty("codigo", 500);
-							json.addProperty("mensagem", "Houve um erro id operação.");
+							json.addProperty("mensagem", "Erro id operação - id operação desconhecido.");
 							outputLine = json.toString();
 						}
 					}
@@ -130,7 +130,7 @@ public class EchoServer extends Thread {
 			} catch (JsonSyntaxException e) {
 				JsonObject json = new JsonObject();
 				json.addProperty("codigo", 500);
-				json.addProperty("mensagem", "Houve um erro com json null.");
+				json.addProperty("mensagem", "Erro de Json - Houve um erro com json null.");
 				System.out.println("Envia para o cliente: " + json.toString());
 				System.out.println(
 						"-------------------------------------------------------------------------------------------");

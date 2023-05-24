@@ -34,7 +34,6 @@ public class IncidentValidation {
 
     public boolean validateShowIncidentsList(Incident incident, String lanesRange) {
         boolean isValid = true;
-
         if (!validateDate(incident.getDate())) {
             System.out.println("Erro: Data inválida.");
             isValid = false;

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import server.entities.User;
+import server.logic.utils.Tools;
 import server.logic.validation.UserValidation;
 import server.service.UserService;
 
@@ -15,256 +16,218 @@ public class UserLogic {
 	private JsonObject json;
 	private UserValidation userValidation;
 	
+	private String message;
+	
 	public UserLogic(JsonObject json) {
 		this.json = json;
 		this.userValidation = new UserValidation();
 	}
 	
 	public String userRegister() {
-		this.user = new User();
-		
-		try {
-			if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
-				user.setName(json.get("nome").getAsString());
-				user.setEmail(json.get("email").getAsString());
-				user.setPassword(json.get("senha").getAsString());
-				user.setToken("");
-				
-				if(userValidation.registerValidation(this.user)) {
-					new UserService().register(user);
-					return createResultJson(1, true);
-				}else {
-					System.out.println("Erro cadastrar usuário - Erro de validação");
-					return createResultJson(1, false);
-				}
-				
-			}else {
-				System.out.println("Erro cadastrar usuário - Erro com null, o json pegou null em algum campo enviado");
-				return createResultJson(1, false);	
-			}
-		}catch (SQLException e) {
-			System.out.println("Erro cadastrar usuário - Erro de SQL: " + e.getMessage());
-			return createResultJson(1, false);
-		} catch (IOException e) {
-			System.out.println("Erro cadastrar usuário - Erro de IOException: " + e.getMessage());
-			return createResultJson(1, false);
-		}catch(Exception e) {
-			System.out.println("Erro cadastrar usuário - Erro de exceção: " + e.getMessage());
-			return createResultJson(11, false);			
-		}
-		
+	    this.user = new User();
+	    
+	    try {
+	        if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null) {
+	            user.setName(json.get("nome").getAsString());
+	            user.setEmail(json.get("email").getAsString());
+	            user.setPassword(json.get("senha").getAsString());
+	            user.setToken("");
+	            
+	            if(userValidation.registerValidation(this.user)) {
+	                new UserService().register(user);
+	                message = "Usuário cadastrado com sucesso";
+	                return new Tools().createResultJson(1, true, message, null, null, null);
+	            } else {
+	                message = "Erro cadastrar usuário - Erro de validação";
+	                System.out.println(message);
+	                return new Tools().createResultJson(1, false, message, null, null, null);
+	            }
+	            
+	        } else {
+	            message = "Erro cadastrar usuário - Erro com null, o json pegou null em algum campo enviado";
+	            System.out.println(message);
+	            return new Tools().createResultJson(1, false, message, null, null, null);
+	        }
+	    } catch (SQLException e) {
+	        message = "Erro cadastrar usuário - Erro de SQL: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (IOException e) {
+	        message = "Erro cadastrar usuário - Erro de IOException: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (Exception e) {
+	        message = "Erro cadastrar usuário - Erro de exceção: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    }
 	}
-	
+
 	public String userLogin() {
-		this.user = new User();
-		
-		try {
-			if(json.get("email") != null && json.get("senha") != null) {
-				user.setEmail(json.get("email").getAsString());
-				user.setPassword(json.get("senha").getAsString());
-				
-				if(userValidation.loginValidation(user)) {
-					this.user = new UserService().searchLogin(user.getEmail(), user.getPassword());
-					
-					if(user == null) {
-						System.out.println("User null");
-						return createResultJson(3, false);
-					}else {
-						System.out.println("certo");
-						return createResultJson(3, true);
-					}
-				}
-				System.out.println("Erro logar usuário - Erro de validação");
-				return createResultJson(3, false);
-			}else {
-				System.out.println("Erro logar usuário - Erro com null, o json pegou null em algum campo enviado");
-				return createResultJson(3, false);
-			}
-		}catch (SQLException e) {
-			System.out.println("Erro logar usuário - Erro de SQL: " + e.getMessage());
-			return createResultJson(3, false);
-		} catch (IOException e) {
-			System.out.println("Erro logar usuário - Erro de IOException: " + e.getMessage());
-			return createResultJson(3, false);
-		}catch(Exception e) {
-			System.out.println("Erro logar usuário - Erro de exceção: " + e.getMessage());
-			return createResultJson(3, false);
-		}
+	    this.user = new User();
+	    
+	    try {
+	        if(json.get("email") != null && json.get("senha") != null) {
+	            user.setEmail(json.get("email").getAsString());
+	            user.setPassword(json.get("senha").getAsString());
+	            
+	            if(userValidation.loginValidation(user)) {
+	                this.user = new UserService().searchLogin(user.getEmail(), user.getPassword());
+	                
+	                if(user == null) {
+	                    message = "Email ou senha errado";
+	                    System.out.println(message);
+	                    return new Tools().createResultJson(3, false, message, null, null, null);
+	                } else {
+	                    message = "Login bem-sucedido";
+	                    System.out.println(message);
+	                    return new Tools().createResultJson(3, true, message, null, null, user);
+	                }
+	            }
+	            message = "Erro logar usuário - Erro de validação";
+	            System.out.println(message);
+	            return new Tools().createResultJson(3, false, message, null, null, null);
+	        } else {
+	            message = "Erro logar usuário - Erro com null, o json pegou null em algum campo enviado";
+	            System.out.println(message);
+	            return new Tools().createResultJson(3, false, message, null, null, null);
+	        }
+	    } catch (SQLException e) {
+	        message = "Erro logar usuário - Erro de SQL: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(3, false, message, null, null, null);
+	    } catch (IOException e) {
+	        message = "Erro logar usuário - Erro de IOException: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(3, false, message, null, null, null);
+	    } catch (Exception e) {
+	        message = "Erro logar usuário - Erro de exceção: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(3, false, message, null, null, null);
+	    }
 	}
-	
+
 	public String userLogout() {
-		
-		try {
-			if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null && json.get("token") != null) {
-				String token = json.get("token").getAsString();
-				int id_usuario = json.get("id_usuario").getAsInt();
-				
-				this.user = new User();
-				user.setToken(token);
-				user.setIdUsuario(id_usuario);
-				
-				if(token.equals("")) // Quer dizer que não esta logado
-					return createResultJson(9, false);
-				
-				if(userValidation.logoutValidation(user)){
-					new UserService().logout(token, id_usuario);	
-					return createResultJson(9, true);
-				}
-				
-				System.out.println("Erro logout - Erro de validação");
-				return createResultJson(9, false);
-			}else {
-				System.out.println("Erro logout - Erro com null, o json pegou null em algum campo enviado");
-				return createResultJson(9, false);
-			}
-		}catch (SQLException e) {
-			System.out.println("Erro logout - Erro de SQL: " + e.getMessage());
-			return createResultJson(9, false);
-		} catch (IOException e) {
-			System.out.println("Erro logout - Erro de IOException: " + e.getMessage());
-			return createResultJson(9, false);
-		}catch(Exception e) {
-			System.out.println("Erro logout - Erro de exceção: " + e.getMessage());
-			return createResultJson(9, false);			
-		}
+	    try {
+	        if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null && json.get("token") != null) {
+	            String token = json.get("token").getAsString();
+	            int id_usuario = json.get("id_usuario").getAsInt();
+	            
+	            this.user = new User();
+	            user.setToken(token);
+	            user.setIdUsuario(id_usuario);
+	            
+	            if(token.equals("")) // Quer dizer que não esta logado
+	                return new Tools().createResultJson(1, false, message, null, null, null);
+	            
+	            if(userValidation.logoutValidation(user)){
+	                new UserService().logout(token, id_usuario);
+	                message = "Logout bem-sucedido";
+	                System.out.println(message);
+	                return new Tools().createResultJson(1, true, message, null, null, null);
+	            }
+	            
+	            message = "Erro logout - Erro de validação";
+	            System.out.println(message);
+	            return new Tools().createResultJson(1, false, message, null, null, null);
+	        } else {
+	            message = "Erro logout - Erro com null, o json pegou null em algum campo enviado";
+	            System.out.println(message);
+	            return new Tools().createResultJson(1, false, message, null, null, null);
+	        }
+	    } catch (SQLException e) {
+	        message = "Erro logout - Erro de SQL: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (IOException e) {
+	        message = "Erro logout - Erro de IOException: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (Exception e) {
+	        message = "Erro logout - Erro de exceção: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    }
 	}
-	
+
 	public String userUpdateRegister(){
-		this.user = new User();
-		
-		try {
-			if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null && json.get("token") != null && json.get("id_usuario") != null) {
-				user.setName(json.get("nome").getAsString());
-				user.setEmail(json.get("email").getAsString());
-				user.setPassword(json.get("senha").getAsString());
-				user.setToken(json.get("token").getAsString());
-				user.setIdUsuario(json.get("id_usuario").getAsInt());
-				
-				if(userValidation.updateRegisterValidation(this.user)) {
-					this.user = new UserService().updateRegister(user);
-					System.out.println(this.user);
-		        	return createResultJson(2, true);
-				}else {
-					System.out.println("Erro editar cadastro - Erro de validação");
-					return createResultJson(2, false);
-				}
-			}
-			System.out.println("Erro editar cadastro - Erro com null, o json pegou null em algum campo enviado");
-			return createResultJson(2, false);
-		}catch (SQLException e) {
-			System.out.println("Erro editar cadastro - Erro de SQL: " + e.getMessage());
-			return createResultJson(2, false);
-		} catch (IOException e) {
-			System.out.println("Erro editar cadastro - Erro de IOException: " + e.getMessage());
-			return createResultJson(2, false);
-		}catch(Exception e) {
-			System.out.println("Erro editar cadastro - Erro de exceção: " + e.getMessage());
-			return createResultJson(11, false);			
-		}
+	    this.user = new User();
+	    
+	    try {
+	        if(json.get("nome") != null && json.get("email") != null && json.get("senha") != null && json.get("token") != null && json.get("id_usuario") != null) {
+	            user.setName(json.get("nome").getAsString());
+	            user.setEmail(json.get("email").getAsString());
+	            user.setPassword(json.get("senha").getAsString());
+	            user.setToken(json.get("token").getAsString());
+	            user.setIdUsuario(json.get("id_usuario").getAsInt());
+	            
+	            if(userValidation.updateRegisterValidation(this.user)) {
+	                this.user = new UserService().updateRegister(user);
+	                message = "Cadastro atualizado com sucesso";
+	                System.out.println(message);
+	                return new Tools().createResultJson(2, true, message, null, null, user);
+	            } else {
+	                message = "Erro editar cadastro - Erro de validação";
+	                System.out.println(message);
+	                return new Tools().createResultJson(2, false, message, null, null, null);
+	            }
+	        }
+	        message = "Erro editar cadastro - Erro com null, o json pegou null em algum campo enviado";
+	        System.out.println(message);
+	        return new Tools().createResultJson(2, false, message, null, null, null);
+	    } catch (SQLException e) {
+	        message = "Erro editar cadastro - Erro de SQL: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(2, false, message, null, null, null);
+	    } catch (IOException e) {
+	        message = "Erro editar cadastro - Erro de IOException: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(2, false, message, null, null, null);
+	    } catch (Exception e) {
+	        message = "Erro editar cadastro - Erro de exceção: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(2, false, message, null, null, null);
+	    }
 	}
-	
+
 	public String deleteUserAccount() {
-		try {
-			if(json.get("token") != null && json.get("id_usuario") != null && json.get("email") != null && json.get("senha") != null) {
-				
-				this.user = new User();
-				user.setToken(json.get("token").getAsString());
-				user.setIdUsuario(json.get("id_usuario").getAsInt());
-				user.setEmail(json.get("email").getAsString());
-				user.setPassword(json.get("senha").getAsString());
-				
-				if(user.getToken().equals("")) {
-					System.out.println("Erro deletar cadastro - Usuário não está logado");
-					return createResultJson(10, false);
-				}
-				new UserService().deleteUserAccount(user.getToken(), user.getIdUsuario(), user.getEmail(), user.getPassword());	
-				return createResultJson(8, true);
-				
-			}else {
-				System.out.println("Erro deletar cadastro - Erro com null, o json pegou null em algum campo enviado");
-				return createResultJson(8, false);
-			}
-		}catch (SQLException e) {
-			System.out.println("Erro deletar cadastro - Erro de SQL: " + e.getMessage());
-			return createResultJson(8, false);
-		} catch (IOException e) {
-			System.out.println("Erro deletar cadastro - Erro de IOException: " + e.getMessage());
-			return createResultJson(8, false);
-		}catch(Exception e) {
-			System.out.println("Erro deletar cadastro - Erro de exceção: " + e.getMessage());
-			return createResultJson(11, false);			
-		}
+	    try {
+	        if(json.get("token") != null && json.get("id_usuario") != null && json.get("email") != null && json.get("senha") != null) {
+	            
+	            this.user = new User();
+	            user.setToken(json.get("token").getAsString());
+	            user.setIdUsuario(json.get("id_usuario").getAsInt());
+	            user.setEmail(json.get("email").getAsString());
+	            user.setPassword(json.get("senha").getAsString());
+	            
+	            if(user.getToken().equals("")) {
+	                message = "Erro deletar cadastro - Usuário não está logado";
+	                System.out.println(message);
+	                return new Tools().createResultJson(1, false, message, null, null, null);
+	            }
+	            new UserService().deleteUserAccount(user.getToken(), user.getIdUsuario(), user.getEmail(), user.getPassword());
+	            message = "Cadastro excluído com sucesso";
+	            System.out.println(message);
+	            return new Tools().createResultJson(1, true, message, null, null, null);
+	            
+	        } else {
+	            message = "Erro deletar cadastro - Erro com null, o json pegou null em algum campo enviado";
+	            System.out.println(message);
+	            return new Tools().createResultJson(1, false, message, null, null, null);
+	        }
+	    } catch (SQLException e) {
+	        message = "Erro deletar cadastro - Erro de SQL: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (IOException e) {
+	        message = "Erro deletar cadastro - Erro de IOException: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    } catch (Exception e) {
+	        message = "Erro deletar cadastro - Erro de exceção: " + e.getMessage();
+	        System.out.println(message);
+	        return new Tools().createResultJson(1, false, message, null, null, null);
+	    }
 	}
 	
-	private String createResultJson(int idOperacao, boolean correct) {
-		
-		JsonObject json = new JsonObject();
-		
-		switch(idOperacao) {
-			case 1: {
-				System.out.println("Operação de cadastro");
-				if(correct) {
-					json.addProperty("codigo", 200);
-				}else {
-					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Houve um erro de validação no cadastro.");
-				}
-				return json.toString();
-			}
-			case 11:{
-				json.addProperty("codigo", 500);
-				json.addProperty("mensagem", "Houve um erro de exceção, talvez o banco de dados não está rodando.");
-				
-				return json.toString();
-			}
-			case 2:{
-				System.out.println("Operação de atualizar cadastro");
-				if(correct) {
-					json.addProperty("codigo", 200);
-					json.addProperty("token", this.user.getToken());
-				}else {
-					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Erro ao atualizar cadastro.");
-				}
-				return json.toString();
-			}
-			case 3: {
-				System.out.println("Operação de login");
-				if(correct) {
-					json.addProperty("codigo", 200);
-					json.addProperty("token", this.user.getToken());
-					json.addProperty("id_usuario", this.user.getIdUsuario());
-				}else {
-					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Email ou senha incorreto.");
-				}
-				return json.toString();
-			}
-			case 8: {
-				System.out.println("Operação de deletar conta");
-				if(correct) {
-					json.addProperty("codigo", 200);
-				}else {
-					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Houve um erro durante o deletar conta.");
-				}
-				return json.toString();
-			}
-			case 9: {
-				System.out.println("Operação de logout");
-				if(correct) {
-					json.addProperty("codigo", 200);
-				}else {
-					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Houve um erro durante o logout.");
-				}
-				return json.toString();
-			}
-			default: {
-				json.addProperty("codigo", 500);
-				json.addProperty("mensagem", "Houve um erro, id da operação enviado inválido. id: " + idOperacao);
-				return json.toString();
-			}
-		}
-	}
 }
