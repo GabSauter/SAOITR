@@ -88,8 +88,8 @@ public class UserValidation {
 	        System.out.println("Erro: O email já está em uso.");
 	        isValid = false;
 	    }
-	    if (!new UserService().isLoggedIn(user.getIdUsuario())) {
-	        System.out.println("Erro: O usuário não está logado.");
+	    if (!new UserService().isLoggedIn(user.getIdUsuario(), user.getToken())) {
+	        System.out.println("Erro: O usuário não está logado ou sua conta logou denovo, logue denovo para recuperar o token.");
 	        isValid = false;
 	    }
 	    if (!isValid) {

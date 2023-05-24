@@ -121,17 +121,17 @@ public class UserDAO {
 		return false;
 	}
 
-	public boolean isLoggedIn(int idUsuario) throws SQLException {
+	public boolean isLoggedIn(int idUsuario, String token) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select * from user where id = ?");
+			st = conn.prepareStatement("select * from user where id = ? and token = ?");
 			st.setInt(1, idUsuario);
+			st.setString(2, token);
 			
 			rs = st.executeQuery();
 			if(rs.next()) {
-				String token = rs.getString("token");
 				if(!token.equals("")) {
 					System.out.println("Esta logado");
 					return true;

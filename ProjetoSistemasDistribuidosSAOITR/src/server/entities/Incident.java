@@ -3,6 +3,7 @@ package server.entities;
 public class Incident {
 	private int id_incident;
 	private int id_user;
+	private String token;
 	private String date;
 	private String highway;
 	private int km;
@@ -43,6 +44,12 @@ public class Incident {
 	}
 	public void setIncident_type(int incident_type) {
 		this.incident_type = incident_type;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

@@ -6,9 +6,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import server.entities.Incident;
+import server.entities.User;
 import server.logic.utils.Tools;
 import server.logic.validation.IncidentValidation;
 import server.service.IncidentService;
+import server.service.UserService;
 
 public class IncidentLogic {
 	
@@ -28,8 +30,9 @@ public class IncidentLogic {
 	    this.incident = new Incident();
 	    
 	    try {
-	        if(json.get("id_usuario") != null && json.get("data") != null && json.get("rodovia") != null && json.get("km") != null && json.get("tipo_incidente") != null) {
+	        if(json.get("id_usuario") != null && json.get("data") != null && json.get("rodovia") != null && json.get("km") != null && json.get("tipo_incidente") != null && json.get("token") != null) {
 	            incident.setId_user(json.get("id_usuario").getAsInt());
+	            incident.setToken(json.get("token").getAsString());
 	            incident.setDate(json.get("data").getAsString());
 	            incident.setHighway(json.get("rodovia").getAsString());
 	            incident.setKm(json.get("km").getAsInt());
@@ -121,8 +124,12 @@ public class IncidentLogic {
 	    this.incident = new Incident();
 	    try {
 	        if(json.get("id_usuario") != null && json.get("token") != null) {
-	            
-	            incidentList = new IncidentService().searchMyIncidents(json.get("token").getAsString(), json.get("id_usuario").getAsInt());
+	        	if (!new UserService().isLoggedIn(json.get("id_usuario").getAsInt(), json.get("token").getAsString())) {
+	        		message = "Erro solicitar lista de meus incidentes - Usuário não está logado ou token está diferente.";
+		            System.out.println(message);
+		            return new Tools().createResultJson(4, false, message, null, null, null);
+	    	    }
+	            incidentList = new IncidentService().searchMyIncidents(json.get("id_usuario").getAsInt());
 	            if(incidentList.size() == 0) {
                 	message = "Nenhum incidente encontrado";
 	                return new Tools().createResultJson(4, false, message, null, null, null);
@@ -156,8 +163,12 @@ public class IncidentLogic {
 	        if(json.get("id_usuario") != null && json.get("token") != null && json.get("id_incidente") != null) {
 	            
 	            boolean hasItemDeleted = false;
-
-	            hasItemDeleted = new IncidentService().deleteIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt());
+	            if (!new UserService().isLoggedIn(json.get("id_usuario").getAsInt(), json.get("token").getAsString())) {
+	        		message = "Erro deletar incidente - Usuário não está logado ou token está diferente.";
+		            System.out.println(message);
+		            return new Tools().createResultJson(1, false, message, null, null, null);
+	    	    }
+	            hasItemDeleted = new IncidentService().deleteIncident(json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt());
 	            if(hasItemDeleted) {
 	                message = "Incidente deletado com sucesso";
 	                System.out.println(message);
@@ -194,8 +205,12 @@ public class IncidentLogic {
 	        if(json.get("id_usuario") != null && json.get("token") != null && json.get("id_incidente") != null && json.get("data") != null && json.get("km") != null&& json.get("rodovia") != null&& json.get("tipo_incidente") != null) {
 	            
 	            boolean hasItemEdited = false;
-	            
-	            hasItemEdited = new IncidentService().editIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(), json.get("data").getAsString(), json.get("rodovia").getAsString(), json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
+	            if (!new UserService().isLoggedIn(json.get("id_usuario").getAsInt(), json.get("token").getAsString())) {
+	        		message = "Erro editar incidente - Usuário não está logado ou token está diferente.";
+		            System.out.println(message);
+		            return new Tools().createResultJson(1, false, message, null, null, null);
+	    	    }
+	            hasItemEdited = new IncidentService().editIncident(json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(), json.get("data").getAsString(), json.get("rodovia").getAsString(), json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
 	            if(hasItemEdited) {
 	                message = "Incidente editado com sucesso";
 	                System.out.println(message);

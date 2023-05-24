@@ -1,6 +1,11 @@
 package server.logic.validation;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import server.entities.Incident;
+import server.entities.User;
+import server.service.UserService;
 
 public class IncidentValidation {
 	
@@ -10,7 +15,7 @@ public class IncidentValidation {
     private static final String INCIDENT_TYPE_REGEX = "\\d+";
     private static final String RANGE_REGEX = "\\d{1,3}-\\d{1,3}";
     
-    public boolean validateReportIncident(Incident incident) {
+    public boolean validateReportIncident(Incident incident) throws SQLException, IOException {
         boolean isValid = true;
 
         if (!validateDate(incident.getDate())) {
@@ -29,10 +34,14 @@ public class IncidentValidation {
             System.out.println("Erro: Tipo de incidente inválido.");
             isValid = false;
         }
+        if (!new UserService().isLoggedIn(incident.getId_user(), incident.getToken())) {
+	        System.out.println("Erro: O usuário não está logado ou sua conta logou denovo, logue denovo para recuperar o token.");
+	        isValid = false;
+	    }
         return isValid;
     }
 
-    public boolean validateShowIncidentsList(Incident incident, String lanesRange) {
+    public boolean validateShowIncidentsList(Incident incident, String lanesRange) throws SQLException, IOException {
         boolean isValid = true;
         if (!validateDate(incident.getDate())) {
             System.out.println("Erro: Data inválida.");

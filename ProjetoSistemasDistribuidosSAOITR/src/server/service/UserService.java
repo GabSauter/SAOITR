@@ -31,9 +31,9 @@ public class UserService {
 		return new UserDAO(conn).emailAlreadyExists(email);
 	}
 
-	public boolean isLoggedIn(int idUsuario) throws SQLException, IOException {
+	public boolean isLoggedIn(int idUsuario, String token) throws SQLException, IOException {
 		Connection conn = Database.connect();
-		return new UserDAO(conn).isLoggedIn(idUsuario);
+		return new UserDAO(conn).isLoggedIn(idUsuario, token);
 	}
 
 	public User updateRegister(User user) throws SQLException, IOException {

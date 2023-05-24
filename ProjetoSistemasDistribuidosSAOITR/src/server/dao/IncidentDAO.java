@@ -105,7 +105,7 @@ public class IncidentDAO {
 		}
 	}
 	
-	public JsonArray searchMyIncidents(String token, int user_id) throws SQLException { // Falta  verificar token
+	public JsonArray searchMyIncidents(int user_id) throws SQLException {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -140,7 +140,7 @@ public class IncidentDAO {
 		}
 	}
 	
-	public boolean deleteIncident(String token, int user_id, int incident_id) throws SQLException { // Falta verificar o token
+	public boolean deleteIncident(int user_id, int incident_id) throws SQLException { 
 		
 		PreparedStatement st = null;
 		
@@ -163,7 +163,7 @@ public class IncidentDAO {
 		}
 	}
 	
-	public boolean editIncident(String token, int user_id, int incident_id, String data, String highway, int km, int incident_type) throws SQLException {
+	public boolean editIncident(int user_id, int incident_id, String data, String highway, int km, int incident_type) throws SQLException {
 		PreparedStatement st = null;
 		
 		try {
