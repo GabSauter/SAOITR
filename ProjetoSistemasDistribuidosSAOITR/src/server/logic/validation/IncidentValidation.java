@@ -9,42 +9,91 @@ public class IncidentValidation {
     private static final String KM_REGEX = "\\d{1,3}";
     private static final String INCIDENT_TYPE_REGEX = "\\d+";
     private static final String RANGE_REGEX = "\\d{1,3}-\\d{1,3}";
-
-    public boolean validateReportIncident(Incident incident) {
-        return validateDate(incident.getDate())
-                && validateHighway(incident.getHighway())
-                && validateKm(incident.getKm())
-                && validateIncidentType(incident.getIncident_type());
-    }
     
+    public boolean validateReportIncident(Incident incident) {
+        boolean isValid = true;
+
+        if (!validateDate(incident.getDate())) {
+            System.out.println("Erro: Data inválida.");
+            isValid = false;
+        }
+        if (!validateHighway(incident.getHighway())) {
+            System.out.println("Erro: Rodovia inválida.");
+            isValid = false;
+        }
+        if (!validateKm(incident.getKm())) {
+            System.out.println("Erro: Km inválido.");
+            isValid = false;
+        }
+        if (!validateIncidentType(incident.getIncident_type())) {
+            System.out.println("Erro: Tipo de incidente inválido.");
+            isValid = false;
+        }
+        return isValid;
+    }
+
     public boolean validateShowIncidentsList(Incident incident, String lanesRange) {
-        return validateDate(incident.getDate())
-                && validateHighway(incident.getHighway())
-                && validateRange(lanesRange);
+        boolean isValid = true;
+
+        if (!validateDate(incident.getDate())) {
+            System.out.println("Erro: Data inválida.");
+            isValid = false;
+        }
+        if (!validateHighway(incident.getHighway())) {
+            System.out.println("Erro: Rodovia inválida.");
+            isValid = false;
+        }
+        if (!validateRange(lanesRange)) {
+            System.out.println("Erro: Faixa de pistas inválida.");
+            isValid = false;
+        }
+        return isValid;
     }
 
     private static boolean validateDate(String date) {
-        return date.matches(DATE_REGEX);
+        if (!date.matches(DATE_REGEX)) {
+            System.out.println("Erro: Formato de data inválido.");
+            return false;
+        }
+        return true;
     }
 
     private static boolean validateHighway(String highway) {
-        return highway.matches(HIGHWAY_REGEX);
+        if (!highway.matches(HIGHWAY_REGEX)) {
+            System.out.println("Erro: Formato de rodovia inválido.");
+            return false;
+        }
+        return true;
     }
 
     private static boolean validateKm(int km) {
         String kmString = Integer.toString(km);
-        return kmString.matches(KM_REGEX);
+
+        if (!kmString.matches(KM_REGEX)) {
+            System.out.println("Erro: Km inválido.");
+            return false;
+        }
+        return true;
     }
 
     private static boolean validateIncidentType(int incidentType) {
         String incidentTypeString = Integer.toString(incidentType);
-        return incidentTypeString.matches(INCIDENT_TYPE_REGEX);
+
+        if (!incidentTypeString.matches(INCIDENT_TYPE_REGEX)) {
+            System.out.println("Erro: Tipo de incidente inválido.");
+            return false;
+        }
+        return true;
     }
-    
+
     private static boolean validateRange(String range) {
         if (range == null) {
             return true; // Range can be null
         }
-        return range.matches(RANGE_REGEX);
+        if (!range.matches(RANGE_REGEX)) {
+            System.out.println("Erro: Formato de faixa de pistas inválido.");
+            return false;
+        }
+        return true;
     }
 }

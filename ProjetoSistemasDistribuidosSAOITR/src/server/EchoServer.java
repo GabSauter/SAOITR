@@ -50,106 +50,66 @@ public class EchoServer extends Thread {
 						case 1: { // Register
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
-							try {
-								outputLine = userLogic.userRegister();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = userLogic.userRegister();
 	
 							break;
 						}
 						case 2: {
 							
 							UserLogic userLogic = new UserLogic(jsonObject);
-							try {
-								outputLine = userLogic.userUpdateRegister();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = userLogic.userUpdateRegister();
 							
 							break;
 						}
 						case 3: { // Login
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
-							try {
-								outputLine = userLogic.userLogin();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = userLogic.userLogin();
 	
 							break;
 						}
 						case 4: {
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
-							try {
-								outputLine = incidentLogic.incidentReport();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = incidentLogic.incidentReport();
 	
 							break;
 						}
 						case 5: {
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
-							try {
-								outputLine = incidentLogic.searchIncidents();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = incidentLogic.searchIncidents();
 	
 							break;
 						}
 						case 6: {
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
-							try {
-								outputLine = incidentLogic.searchMyIncidents();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = incidentLogic.searchMyIncidents();
 	
 							break;
 						}
 						case 7: {
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
-							try {
-								outputLine = incidentLogic.deleteIncident();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = incidentLogic.deleteIncident();
 	
 							break;
 						}
 						case 8: { 
 							
 							UserLogic userLogic = new UserLogic(jsonObject);
-							try {
-								outputLine = userLogic.deleteUserAccount();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = userLogic.deleteUserAccount();
 	
 							break;
 						}
 						case 9: { // logout
 	
 							UserLogic userLogic = new UserLogic(jsonObject);
-							try {
-								outputLine = userLogic.userLogout();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = userLogic.userLogout();
 	
 							break;
 						}
 						case 10: { // 
 							
 							IncidentLogic incidentLogic = new IncidentLogic(jsonObject);
-							try {
-								outputLine = incidentLogic.editIncident();
-							} catch (SQLException | IOException e) {
-								System.out.println(e.getMessage());
-							}
+							outputLine = incidentLogic.editIncident();
 	
 							break;
 						}

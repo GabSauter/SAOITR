@@ -22,7 +22,7 @@ public class IncidentLogic {
 		this.incidentValidation = new IncidentValidation();
 	}
 	
-	public String incidentReport() throws SQLException, IOException {
+	public String incidentReport() {
 		this.incident = new Incident();
 		
 		try {
@@ -34,23 +34,29 @@ public class IncidentLogic {
 				incident.setIncident_type(json.get("tipo_incidente").getAsInt());
 				
 				if(incidentValidation.validateReportIncident(this.incident)) {
-		        	new IncidentService().incidentReport(incident);
-		        	return createResultJson(4, true);
+					new IncidentService().incidentReport(incident);
+					return createResultJson(4, true);
 				}else {
-					System.out.println("Erro 1 - Erro de validação do incidente");
+					System.out.println("Erro reportar incidente - Erro de validação do incidente");
 					return createResultJson(4, false);
 				}
+			}else {
+				System.out.println("Erro reportar incidente - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(4, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro reportar incidente - Erro de SQL: " + e.getMessage());
+			return createResultJson(4, false);
+		} catch (IOException e) {
+			System.out.println("Erro reportar incidente - Erro de IOException: " + e.getMessage());
+			return createResultJson(4, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro reportar incidente - Erro de exceção: " + e.getMessage());
 			return createResultJson(4, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(4, false);	
 	}
 	
-	public String searchIncidents() throws SQLException, IOException {
+	public String searchIncidents() {
 		this.incident = new Incident();
 		try {
 			if(json.get("data") != null && json.get("rodovia") != null && json.get("periodo") != null) {
@@ -68,80 +74,116 @@ public class IncidentLogic {
 					finalLane = lanes[1];
 				}
 				String lanesRange = (json.get("faixa_km") != null && !json.get("faixa_km").isJsonNull()) ? json.get("faixa_km").toString() : null;
-				//if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
+				if(incidentValidation.validateShowIncidentsList(this.incident, lanesRange)) {
+					
 					incidentList = new IncidentService().searchIncidents(incident.getHighway(), incident.getDate(), initialLane, finalLane, period);
-		        	return createResultJson(5, true);
-//				}else {
-//					System.out.println("Erro 1 - Erro de validação");
-//					return createResultJson(5, false);
-//				}
+					return createResultJson(5, true);
+				}else {
+					System.out.println("Erro solicitar lista de incidentes - Erro de validação");
+					return createResultJson(5, false);
+				}
+			}else {
+				System.out.println("Erro solicitar lista de incidentes - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(5, false);	
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro solicitar lista de incidentes - Erro de SQL: " + e.getMessage());
+			return createResultJson(5, false);
+		} catch (IOException e) {
+			System.out.println("Erro solicitar lista de incidentes - Erro de IOException: " + e.getMessage());
+			return createResultJson(5, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro solicitar lista de incidentes - Erro de exceção: " + e.getMessage());
 			return createResultJson(5, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(5, false);	
 	}
 	
-	public String searchMyIncidents() throws SQLException, IOException {
+	public String searchMyIncidents() {
 		this.incident = new Incident();
 		try {
 			if(json.get("id_usuario") != null && json.get("token") != null) {
 				
 				incidentList = new IncidentService().searchMyIncidents(json.get("token").getAsString(), json.get("id_usuario").getAsInt());
-		        return createResultJson(6, true);
+				return createResultJson(6, true);
+				
+			}else {
+				System.out.println("Erro solicitar lista de meus incidentes - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(6, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro solicitar lista de meus incidentes - Erro de SQL: " + e.getMessage());
+			return createResultJson(6, false);
+		} catch (IOException e) {
+			System.out.println("Erro solicitar lista de meus incidentes - Erro de IOException: " + e.getMessage());
+			return createResultJson(6, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro solicitar lista de meus incidentes - Erro de exceção: " + e.getMessage());
 			return createResultJson(6, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(6, false);	
 	}
 	
-	public String deleteIncident() throws SQLException, IOException {
+	public String deleteIncident(){
 		this.incident = new Incident();
 		try {
 			if(json.get("id_usuario") != null && json.get("token") != null && json.get("id_incidente") != null) {
 				
-				boolean hasItemDeleted = new IncidentService().deleteIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt());
-				if(hasItemDeleted)
+				boolean hasItemDeleted = false;
+
+				hasItemDeleted = new IncidentService().deleteIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt());
+				if(hasItemDeleted) {
 					System.out.println("Incidente deletado com sucesso.");
-				else
-					System.out.println("Incidente não encontrado.");
-		        return createResultJson(7, true);
+					return createResultJson(7, true);
+				}
+				else {
+					System.out.println("Erro deletar incidente - Incidente não encontrado.");
+					return createResultJson(7, false);
+				}
+
+			}else {
+				System.out.println("Erro solicitar lista de incidentes - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(7, false);	
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro deletar incidente - Erro de SQL: " + e.getMessage());
+			return createResultJson(7, false);
+		} catch (IOException e) {
+			System.out.println("Erro deletar incidente - Erro de IOException: " + e.getMessage());
+			return createResultJson(7, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro deletar incidente - Erro de exceção: " + e.getMessage());
 			return createResultJson(7, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(7, false);
 	}
 	
-	public String editIncident() throws SQLException, IOException {
+	public String editIncident() {
 		this.incident = new Incident();
 		try {
 			if(json.get("id_usuario") != null && json.get("token") != null && json.get("id_incidente") != null && json.get("data") != null && json.get("km") != null&& json.get("rodovia") != null&& json.get("tipo_incidente") != null) {
 				
-				boolean hasItemEdited = new IncidentService().editIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(), json.get("data").getAsString(), json.get("rodovia").getAsString(), json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
-				if(hasItemEdited)
+				boolean hasItemEdited = false;
+				
+				hasItemEdited = new IncidentService().editIncident(json.get("token").getAsString(), json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(), json.get("data").getAsString(), json.get("rodovia").getAsString(), json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
+				if(hasItemEdited) {
 					System.out.println("Incidente editado com sucesso.");
-				else
-					System.out.println("Incidente não encontrado.");
-		        return createResultJson(10, true);
+					return createResultJson(10, true);
+				}else {
+					System.out.println("Erro editar incidente - Incidente não encontrado.");
+					return createResultJson(10, false);
+				}
+			}else {
+				System.out.println("Erro solicitar lista de incidentes - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(10, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro solicitar lista de incidentes - Erro de SQL: " + e.getMessage());
+			return createResultJson(10, false);
+		} catch (IOException e) {
+			System.out.println("Erro editar incidente - Erro de IOException: " + e.getMessage());
+			return createResultJson(10, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro solicitar lista de incidentes - Erro de exceção: " + e.getMessage());
 			return createResultJson(10, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(10, false);
 	}
 	
 	private String createResultJson(int idOperacao, boolean correct) {
@@ -150,12 +192,12 @@ public class IncidentLogic {
 		
 		switch(idOperacao) {
 			case 4: {
-				System.out.println("Operação de cadastro");
+				System.out.println("Operação de cadastro de incidente");
 				if(correct) {
 					json.addProperty("codigo", 200);
 				}else {
 					json.addProperty("codigo", 500);
-					json.addProperty("mensagem", "Houve um erro de validação no cadastro.");
+					json.addProperty("mensagem", "Houve um erro de validação no cadastro de incidente.");
 				}
 				return json.toString();
 			}

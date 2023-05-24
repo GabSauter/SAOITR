@@ -20,7 +20,7 @@ public class UserLogic {
 		this.userValidation = new UserValidation();
 	}
 	
-	public String userRegister() throws SQLException, IOException {
+	public String userRegister() {
 		this.user = new User();
 		
 		try {
@@ -31,34 +31,41 @@ public class UserLogic {
 				user.setToken("");
 				
 				if(userValidation.registerValidation(this.user)) {
-		        	new UserService().register(user);
-		        	return createResultJson(1, true);
+					new UserService().register(user);
+					return createResultJson(1, true);
 				}else {
-					System.out.println("Erro 1 - Erro de validação");
+					System.out.println("Erro cadastrar usuário - Erro de validação");
 					return createResultJson(1, false);
 				}
+				
+			}else {
+				System.out.println("Erro cadastrar usuário - Erro com null, o json pegou null em algum campo enviado");
+				return createResultJson(1, false);	
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro cadastrar usuário - Erro de SQL: " + e.getMessage());
+			return createResultJson(1, false);
+		} catch (IOException e) {
+			System.out.println("Erro cadastrar usuário - Erro de IOException: " + e.getMessage());
+			return createResultJson(1, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
+			System.out.println("Erro cadastrar usuário - Erro de exceção: " + e.getMessage());
 			return createResultJson(11, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(1, false);	
+		
 	}
 	
-	public String userLogin() throws SQLException, IOException {
+	public String userLogin() {
 		this.user = new User();
 		
 		try {
 			if(json.get("email") != null && json.get("senha") != null) {
-				String email = json.get("email").getAsString();
-				String password = json.get("senha").getAsString();
-				
-				user.setEmail(email);
-				user.setPassword(password);
+				user.setEmail(json.get("email").getAsString());
+				user.setPassword(json.get("senha").getAsString());
 				
 				if(userValidation.loginValidation(user)) {
-					this.user = new UserService().searchLogin(email, password);
+					this.user = new UserService().searchLogin(user.getEmail(), user.getPassword());
+					
 					if(user == null) {
 						System.out.println("User null");
 						return createResultJson(3, false);
@@ -67,21 +74,28 @@ public class UserLogic {
 						return createResultJson(3, true);
 					}
 				}
-				System.out.println("Erro de validação");
+				System.out.println("Erro logar usuário - Erro de validação");
+				return createResultJson(3, false);
+			}else {
+				System.out.println("Erro logar usuário - Erro com null, o json pegou null em algum campo enviado");
 				return createResultJson(3, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro logar usuário - Erro de SQL: " + e.getMessage());
+			return createResultJson(3, false);
+		} catch (IOException e) {
+			System.out.println("Erro logar usuário - Erro de IOException: " + e.getMessage());
+			return createResultJson(3, false);
 		}catch(Exception e) {
-			System.out.println("json null ou banco de dados não está rodando");
+			System.out.println("Erro logar usuário - Erro de exceção: " + e.getMessage());
 			return createResultJson(3, false);
 		}
-		System.out.println("Erro 3 - Erro com json pegando null");
-		return createResultJson(3, false);
 	}
 	
-	public String userLogout() throws SQLException, IOException {
+	public String userLogout() {
 		
 		try {
-			if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null) {
+			if(!json.get("token").equals(JsonNull.INSTANCE) && json.get("id_usuario") != null && json.get("token") != null) {
 				String token = json.get("token").getAsString();
 				int id_usuario = json.get("id_usuario").getAsInt();
 				
@@ -96,19 +110,26 @@ public class UserLogic {
 					new UserService().logout(token, id_usuario);	
 					return createResultJson(9, true);
 				}
-				System.out.println("Erro de validação no logout");
+				
+				System.out.println("Erro logout - Erro de validação");
 				return createResultJson(9, false);
 			}else {
-				System.out.println("Erro de que envolve null");
+				System.out.println("Erro logout - Erro com null, o json pegou null em algum campo enviado");
 				return createResultJson(9, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro logout - Erro de SQL: " + e.getMessage());
+			return createResultJson(9, false);
+		} catch (IOException e) {
+			System.out.println("Erro logout - Erro de IOException: " + e.getMessage());
+			return createResultJson(9, false);
 		}catch(Exception e) {
-			System.out.println("json null ou banco de dados não está rodando");
+			System.out.println("Erro logout - Erro de exceção: " + e.getMessage());
 			return createResultJson(9, false);			
 		}
 	}
 	
-	public String userUpdateRegister() throws SQLException, IOException{
+	public String userUpdateRegister(){
 		this.user = new User();
 		
 		try {
@@ -124,45 +145,54 @@ public class UserLogic {
 					System.out.println(this.user);
 		        	return createResultJson(2, true);
 				}else {
-					System.out.println("Erro 1 - Erro de validação ou usuário não está logado.");
+					System.out.println("Erro editar cadastro - Erro de validação");
 					return createResultJson(2, false);
 				}
 			}
+			System.out.println("Erro editar cadastro - Erro com null, o json pegou null em algum campo enviado");
+			return createResultJson(2, false);
+		}catch (SQLException e) {
+			System.out.println("Erro editar cadastro - Erro de SQL: " + e.getMessage());
+			return createResultJson(2, false);
+		} catch (IOException e) {
+			System.out.println("Erro editar cadastro - Erro de IOException: " + e.getMessage());
+			return createResultJson(2, false);
 		}catch(Exception e) {
-			System.out.println("Erro 2 - Erro de exceção, ver se o banco de dados está rodando.");
-			e.printStackTrace();
+			System.out.println("Erro editar cadastro - Erro de exceção: " + e.getMessage());
 			return createResultJson(11, false);			
 		}
-		System.out.println("Erro 3 - Erro com null");
-		return createResultJson(2, false);
 	}
 	
-	public String deleteUserAccount() throws SQLException, IOException {
+	public String deleteUserAccount() {
 		try {
 			if(json.get("token") != null && json.get("id_usuario") != null && json.get("email") != null && json.get("senha") != null) {
-				String token = json.get("token").getAsString();
-				int id_usuario = json.get("id_usuario").getAsInt();
-				String email = json.get("email").getAsString();
-				String password = json.get("senha").getAsString();
 				
 				this.user = new User();
-				user.setToken(token);
-				user.setIdUsuario(id_usuario);
-				user.setEmail(email);
-				user.setPassword(password);
+				user.setToken(json.get("token").getAsString());
+				user.setIdUsuario(json.get("id_usuario").getAsInt());
+				user.setEmail(json.get("email").getAsString());
+				user.setPassword(json.get("senha").getAsString());
 				
-				if(token.equals("")) // Quer dizer que não esta logado
+				if(user.getToken().equals("")) {
+					System.out.println("Erro deletar cadastro - Usuário não está logado");
 					return createResultJson(10, false);
-				new UserService().deleteUserAccount(token, id_usuario, email, password);	
+				}
+				new UserService().deleteUserAccount(user.getToken(), user.getIdUsuario(), user.getEmail(), user.getPassword());	
 				return createResultJson(8, true);
+				
 			}else {
-				System.out.println("Erro de que envolve null");
+				System.out.println("Erro deletar cadastro - Erro com null, o json pegou null em algum campo enviado");
 				return createResultJson(8, false);
 			}
+		}catch (SQLException e) {
+			System.out.println("Erro deletar cadastro - Erro de SQL: " + e.getMessage());
+			return createResultJson(8, false);
+		} catch (IOException e) {
+			System.out.println("Erro deletar cadastro - Erro de IOException: " + e.getMessage());
+			return createResultJson(8, false);
 		}catch(Exception e) {
-			System.out.println("json null ou banco de dados não está rodando");
-			e.printStackTrace();
-			return createResultJson(8, false);			
+			System.out.println("Erro deletar cadastro - Erro de exceção: " + e.getMessage());
+			return createResultJson(11, false);			
 		}
 	}
 	
