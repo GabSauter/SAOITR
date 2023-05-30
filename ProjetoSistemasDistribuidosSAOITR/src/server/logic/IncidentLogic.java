@@ -91,7 +91,8 @@ public class IncidentLogic {
 	                incidentList = new IncidentService().searchIncidents(incident.getHighway(), date[0], initialLane, finalLane, period);
 	                if(incidentList.size() == 0) {
 	                	message = "Nenhum incidente encontrado";
-		                return new Tools().createResultJson(4, false, message, null, null, null);
+	                	System.out.println(message);
+		                return new Tools().createResultJson(4, true, message, incidentList, null, null);
 	                }
 	                message = "Lista de incidentes recuperada com sucesso";
 	                return new Tools().createResultJson(4, true, message, incidentList, null, null);
@@ -132,7 +133,7 @@ public class IncidentLogic {
 	            incidentList = new IncidentService().searchMyIncidents(json.get("id_usuario").getAsInt());
 	            if(incidentList.size() == 0) {
                 	message = "Nenhum incidente encontrado";
-	                return new Tools().createResultJson(4, false, message, null, null, null);
+	                return new Tools().createResultJson(4, false, message, incidentList, null, null);
                 }
 	            message = "Lista de meus incidentes recuperada com sucesso";
 	            return new Tools().createResultJson(4, true, message, incidentList, null, null);

@@ -179,6 +179,9 @@ public class ShowIncidentsLayout extends JFrame {
         	int codigo = jsonObject.get("codigo").getAsInt();
         	if(codigo == 200) {
         		if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+        			if(jsonObject.get("lista_incidentes").getAsJsonArray().size() == 0) {
+        				JOptionPane.showMessageDialog(this, "Não foi encontrado incidente", "Operação de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
+        			}
 	        		DefaultTableModel model = (DefaultTableModel) table.getModel();
 	        		model.fireTableDataChanged();
 	        		model.setRowCount(0);
@@ -208,7 +211,7 @@ public class ShowIncidentsLayout extends JFrame {
         		}else
             		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}else {
-        		JOptionPane.showMessageDialog(this, "Mostrar incidentes deu errado, talvez nenhum incidente foi encontrado", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
+        		JOptionPane.showMessageDialog(this, "Mostrar incidentes deu errado", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
         	}
         }else {
         	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de mostrar incidentes", JOptionPane.ERROR_MESSAGE);
