@@ -34,12 +34,12 @@ Primeiro passo: Conectar com o mySQL
 
 Segundo passo: Rodar o servidor
 
-	Para rodar o servidor  basta ir na classe EchoServer.java em ProjetoSistemasDistribuidosSAOITR/src/server/EchoServer.java
+	Para rodar o servidor  basta ir na classe AppServer.java em ProjetoSistemasDistribuidosSAOITR/src/server/AppServer.java
 	Note que o servidor está configurado para rodar na porta 24001.
 
 Terceiro passo: Rodar o cliente
 
-	Para rodar o cliente  basta ir na classe EchoCliente.java em ProjetoSistemasDistribuidosSAOITR/src/client/EchoClient.java
+	Para rodar o cliente  basta ir na classe AppCliente.java em ProjetoSistemasDistribuidosSAOITR/src/client/AppClient.java
 	No cliente deverá escrever o ip do servidor, 127.0.0.1 caso estiver rodando o servidor localmente.
 	Note que o cliente está configurado para conectar com servidor na porta 24001.
 	
