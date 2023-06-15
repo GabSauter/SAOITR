@@ -205,11 +205,15 @@ public class UserLogic {
 	                System.out.println(message);
 	                return new Tools().createResultJson(1, false, message, null, null, null);
 	            }
-	            new UserService().deleteUserAccount(user.getToken(), user.getIdUsuario(), user.getEmail(), user.getPassword());
-	            message = "Cadastro excluído com sucesso";
+	            int isManipulated = new UserService().deleteUserAccount(user.getToken(), user.getIdUsuario(), user.getEmail(), user.getPassword());
+	            if(isManipulated > 0) {
+	            	message = "Cadastro excluído com sucesso";
+	            	System.out.println(message);
+	            	return new Tools().createResultJson(1, true, message, null, null, null);
+	            }
+	            message = "Erro deletar cadastro - Erro ao deletar usuário";
 	            System.out.println(message);
-	            return new Tools().createResultJson(1, true, message, null, null, null);
-	            
+	            return new Tools().createResultJson(1, false, message, null, null, null);
 	        } else {
 	            message = "Erro deletar cadastro - Erro com null, o json pegou null em algum campo enviado";
 	            System.out.println(message);

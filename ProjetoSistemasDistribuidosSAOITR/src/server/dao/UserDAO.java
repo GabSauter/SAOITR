@@ -189,9 +189,9 @@ public class UserDAO {
 		return null;
 	}
 
-	public void deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException {
+	public int deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException {
 		PreparedStatement st = null;
-		
+		int linhasManipuladas = 0;
 		try {
 			st = conn.prepareStatement("delete from user where email = ? and password = ? and id = ? and token = ?");
 			
@@ -200,11 +200,12 @@ public class UserDAO {
 			st.setInt(3, id_usuario);
 			st.setString(4, token);
 			
-			st.executeUpdate();
+			linhasManipuladas = st.executeUpdate();
 		} finally {
 			Database.endStatement(st);
 			Database.disconnect();
 		}
+		return linhasManipuladas;
 	}
 	
 	public List<User> getallLoggedIn() throws SQLException{

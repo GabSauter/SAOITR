@@ -41,9 +41,9 @@ public class UserService {
 		return new UserDAO(conn).updateRegister(user);
 	}
 
-	public void deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException, IOException {
+	public int deleteUserAccount(String token, int id_usuario, String email, String password) throws SQLException, IOException {
 		Connection conn = Database.connect();
-		new UserDAO(conn).deleteUserAccount(token, id_usuario, email, password);
+		return new UserDAO(conn).deleteUserAccount(token, id_usuario, email, password);
 	}
 	
 	public List<User> getallLoggedIn() throws SQLException, IOException{
