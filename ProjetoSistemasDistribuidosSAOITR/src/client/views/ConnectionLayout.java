@@ -10,6 +10,7 @@ import client.logic.SocketLogic;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
@@ -77,9 +78,15 @@ public class ConnectionLayout extends JFrame {
 	}
 
 	private void btnConnectAction() {
-		this.ip = txtFieldIp.getText().toString();
-		this.port = Integer.parseInt(txtFieldPort.getText().toString());
-		boolean isConnected = new SocketLogic().socketConnectClient(ip, port, this);
+		boolean isConnected = false;
+		try {
+			this.ip = txtFieldIp.getText().toString();
+			this.port = Integer.parseInt(txtFieldPort.getText().toString());
+			isConnected = new SocketLogic().socketConnectClient(ip, port, this);
+			
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(this, "Houve erro durante a tentativa de conexão.", "Erro.", JOptionPane.ERROR_MESSAGE);
+		}
 		
 		if(isConnected) {
 			new LoginLayout().setVisible(true);

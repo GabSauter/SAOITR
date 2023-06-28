@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import client.cryptography.CaesarCipher;
 import client.logic.SocketLogic;
@@ -99,21 +100,25 @@ public class LoginLayout extends JFrame {
 		User user = new User();
 		user.loginResponse(inputLine);
 		
-        JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
-        if(jsonObject != null) {
-        	if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
-	        	int codigo = jsonObject.get("codigo").getAsInt();
-	        	if(codigo == 200) {
-	        		new HomeLayout(user).setVisible(true);
-	    			this.dispose();
-	        	}else {
-	        		JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de login", JOptionPane.ERROR_MESSAGE);
-	        	}
-        	}else
-        		JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de login", JOptionPane.ERROR_MESSAGE);
-        }else {
-        	JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de login", JOptionPane.ERROR_MESSAGE);
-        }
+		try {
+			JsonObject jsonObject = new Gson().fromJson(inputLine, JsonObject.class);
+			if(jsonObject != null) {
+				if(jsonObject.get("codigo") != null && !jsonObject.get("codigo").isJsonNull()) {
+					int codigo = jsonObject.get("codigo").getAsInt();
+					if(codigo == 200) {
+						new HomeLayout(user).setVisible(true);
+						this.dispose();
+					}else {
+						JOptionPane.showMessageDialog(this, "Email ou senha incorreta.", "Erro de login", JOptionPane.ERROR_MESSAGE);
+					}
+				}else
+					JOptionPane.showMessageDialog(this, "Não foi possível pegar código no jsonObject", "Operação de login", JOptionPane.ERROR_MESSAGE);
+			}else {
+				JOptionPane.showMessageDialog(this, "JsonObject ta null.", "Erro de login", JOptionPane.ERROR_MESSAGE);
+			}
+		}catch(JsonSyntaxException e) {
+			JOptionPane.showMessageDialog(null, "Houve erro com Json null.");
+		}
 	}
 	
 	private void btnCreateAccountAction() {

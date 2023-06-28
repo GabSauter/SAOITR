@@ -3,6 +3,8 @@ package server;
 import java.net.*;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -42,9 +44,16 @@ public class EchoServer extends Thread {
 					Gson gson = new Gson();
 
 					jsonObject = gson.fromJson(inputLine, JsonObject.class);
+					
 					if (jsonObject != null)
-						if (jsonObject.get("id_operacao") != null)
-							operation = jsonObject.get("id_operacao").getAsInt();
+						if (jsonObject.get("id_operacao") != null) {
+							try {
+								operation = jsonObject.get("id_operacao").getAsInt();
+								
+							}catch(UnsupportedOperationException e) {
+								JOptionPane.showMessageDialog(null, "Operação não suportada.");
+							}
+						}
 
 					switch (operation) {
 						case 1: {
@@ -131,6 +140,14 @@ public class EchoServer extends Thread {
 				JsonObject json = new JsonObject();
 				json.addProperty("codigo", 500);
 				json.addProperty("mensagem", "Erro de Json - Houve um erro com json null.");
+				System.out.println("Envia para o cliente: " + json.toString());
+				System.out.println(
+						"-------------------------------------------------------------------------------------------");
+				out.println(json.toString());
+			}catch(NumberFormatException e) {
+				JsonObject json = new JsonObject();
+				json.addProperty("codigo", 500);
+				json.addProperty("mensagem", "Erro de formato de variavel.");
 				System.out.println("Envia para o cliente: " + json.toString());
 				System.out.println(
 						"-------------------------------------------------------------------------------------------");
