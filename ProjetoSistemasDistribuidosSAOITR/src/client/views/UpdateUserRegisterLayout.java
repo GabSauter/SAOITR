@@ -148,6 +148,8 @@ public class UpdateUserRegisterLayout extends JFrame {
 			}
 		} catch (JsonSyntaxException e) {
 			JOptionPane.showMessageDialog(null, "Houve erro com Json null.");
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Houve erro inesperado.");
 		}
 
 	}

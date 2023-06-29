@@ -34,6 +34,9 @@ public class SocketLogic {
         } catch (IllegalArgumentException e) {
         	System.err.println("Port out of range");
             connectionLayout.setTextLblConnectionResult("Port out of range");
+        } catch (Exception e) {
+        	System.err.println("Houve um erro inesperado");
+            connectionLayout.setTextLblConnectionResult("Houve um erro inesperado");
         }
         return false;
 	}
@@ -47,6 +50,7 @@ public class SocketLogic {
         	System.out.println("Recebe do servidor: " + inputLine);
         	return inputLine;
         }catch(Exception e){
+        	System.out.println("Houve um erro inesperado");
         	System.out.println(e);
         }
 		return "";

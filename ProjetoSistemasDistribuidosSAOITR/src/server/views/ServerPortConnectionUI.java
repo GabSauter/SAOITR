@@ -119,6 +119,12 @@ public class ServerPortConnectionUI extends JFrame {
 				lblServerStatus.setText("Status: Erro no sevidor.");
 				JOptionPane.showMessageDialog(this, "Could not listen on port", "Could not listen on port", JOptionPane.ERROR_MESSAGE);
 				System.exit(1);
+			}catch (Exception e) {
+				System.err.println("Erro Inesperado");
+				lblServerStatus.setForeground(Color.RED);
+				lblServerStatus.setText("Status: Erro no sevidor.");
+				JOptionPane.showMessageDialog(this, "Erro Inesperado", "Erro Inesperado", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
 			}
 			finally {
 				try {
@@ -141,22 +147,22 @@ public class ServerPortConnectionUI extends JFrame {
 		List<User> loggedUsers = new ArrayList<User>();
 		try {
 			loggedUsers = userService.getallLoggedIn();
+			DefaultTableModel model = (DefaultTableModel) loginTable.getModel();
+			model.fireTableDataChanged();
+			model.setRowCount(0);
+			
+			for(User loggedUser: loggedUsers) {
+				model.addRow(new Object[] {
+						loggedUser.getIdUsuario(),
+						loggedUser.getName(),
+						loggedUser.getEmail(),
+						loggedUser.getPassword(),
+						loggedUser.getToken()
+				});
+			}
 		} catch (SQLException | IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Erro com o banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 		
-		DefaultTableModel model = (DefaultTableModel) loginTable.getModel();
-		model.fireTableDataChanged();
-		model.setRowCount(0);
-		
-		for(User loggedUser: loggedUsers) {
-			model.addRow(new Object[] {
-					loggedUser.getIdUsuario(),
-					loggedUser.getName(),
-					loggedUser.getEmail(),
-					loggedUser.getPassword(),
-					loggedUser.getToken()
-			});
-		}
 	}
 }
